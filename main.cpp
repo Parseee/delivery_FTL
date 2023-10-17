@@ -10,6 +10,8 @@ int main() {
     // some code for gui
 
     while (true) {
+        // add random time for waiting
         Request *request = new Request();
+        Dispatcher dispatcher(request);
     }
 }

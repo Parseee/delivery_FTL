@@ -4,7 +4,8 @@
 
 class Dispatcher {
 public:
-    std::vector<Request> requests;
-    
+    Dispatcher (Request* request) {
+        
+    }
     void processRequests();
 };
