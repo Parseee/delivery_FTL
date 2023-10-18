@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcls.a CMakeFiles/cls.dir/courier.cpp.o
+/usr/bin/ranlib libcls.a

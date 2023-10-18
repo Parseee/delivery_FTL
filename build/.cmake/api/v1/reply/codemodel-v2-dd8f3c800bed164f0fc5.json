@@ -1,0 +1,88 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.27.3"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "class",
+					"jsonFile" : "directory-class-Debug-943a6d49c962ebc75cfb.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.27.3"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "class",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1
+					],
+					"name" : "delivery_FTL",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "cls::@b6006207bac832bbf61c",
+					"jsonFile" : "target-cls-Debug-cc0809b7989c1ad49aef.json",
+					"name" : "cls",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "delivery_FTL::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-delivery_FTL-Debug-44c0463c1402d79d239a.json",
+					"name" : "delivery_FTL",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build",
+		"source" : "/Users/ilababakov/Documents/code/study_solutions/prac/delivery"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
