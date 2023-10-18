@@ -4,8 +4,8 @@
 
 class Dispatcher {
 public:
-    Dispatcher (Request* request) {
-
+    Dispatcher(Request *request) {
+        std::cout << "good\n";
     }
     void processRequest();
  private:
