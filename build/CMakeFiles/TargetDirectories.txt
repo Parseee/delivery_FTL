@@ -1,5 +1,5 @@
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles/delivery_FTL.dir
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles/package.dir
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles/package_source.dir
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles/edit_cache.dir
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles/rebuild_cache.dir
+/Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/build/CMakeFiles/delivery_FTL.dir
+/Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/build/CMakeFiles/package.dir
+/Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/build/CMakeFiles/package_source.dir
+/Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/build/CMakeFiles/edit_cache.dir
+/Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/build/CMakeFiles/rebuild_cache.dir

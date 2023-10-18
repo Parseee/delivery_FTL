@@ -1,4 +1,4 @@
-# Install script for directory: /Users/ilababakov/Documents/code/study_solutions/prac/delivery
+# Install script for directory: /Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

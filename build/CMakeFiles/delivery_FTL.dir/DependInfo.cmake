@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/ilababakov/Documents/code/study_solutions/prac/delivery/main.cpp" "CMakeFiles/delivery_FTL.dir/main.cpp.o" "gcc" "CMakeFiles/delivery_FTL.dir/main.cpp.o.d"
+  "/Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/main.cpp" "CMakeFiles/delivery_FTL.dir/main.cpp.o" "gcc" "CMakeFiles/delivery_FTL.dir/main.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

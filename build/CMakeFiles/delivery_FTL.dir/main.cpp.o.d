@@ -1,5 +1,5 @@
 CMakeFiles/delivery_FTL.dir/main.cpp.o: \
-  /Users/ilababakov/Documents/code/study_solutions/prac/delivery/main.cpp \
+  /Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/__config \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/pthread.h \
