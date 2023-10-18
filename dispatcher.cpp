@@ -1,8 +1,9 @@
 #include <vector>
 #include "dispatcher.h"
+#include <iostream>
 #include "request.h"
 
 // Метод для обработки поступающих заявок
-void Dispatcher::processRequests() {
-
+Dispatcher::Dispatcher(Request *request) {
+    std::cout << "good\n";
 }
