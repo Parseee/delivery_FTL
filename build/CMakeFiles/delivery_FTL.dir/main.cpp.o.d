@@ -236,4 +236,6 @@ CMakeFiles/delivery_FTL.dir/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/cmath \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/math.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/math.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/numeric
+  /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/numeric \
+  /Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/include/request.h \
+  /Users/ilababakov/Documents/code/study_solutions/prac/delivery_FTL/include/courier.h
