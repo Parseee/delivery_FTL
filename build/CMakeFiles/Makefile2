@@ -64,32 +64,15 @@ CMAKE_BINARY_DIR = /Users/ilababakov/Documents/code/study_solutions/prac/deliver
 
 # The main recursive "all" target.
 all: CMakeFiles/delivery_FTL.dir/all
-all: class/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall: class/preinstall
+preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/delivery_FTL.dir/clean
-clean: class/clean
 .PHONY : clean
-
-#=============================================================================
-# Directory level rules for directory class
-
-# Recursive "all" directory target.
-class/all: class/CMakeFiles/cls.dir/all
-.PHONY : class/all
-
-# Recursive "preinstall" directory target.
-class/preinstall:
-.PHONY : class/preinstall
-
-# Recursive "clean" directory target.
-class/clean: class/CMakeFiles/cls.dir/clean
-.PHONY : class/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/delivery_FTL.dir
@@ -98,7 +81,7 @@ class/clean: class/CMakeFiles/cls.dir/clean
 CMakeFiles/delivery_FTL.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/delivery_FTL.dir/build.make CMakeFiles/delivery_FTL.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/delivery_FTL.dir/build.make CMakeFiles/delivery_FTL.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles --progress-num=3,4 "Built target delivery_FTL"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles --progress-num=1,2 "Built target delivery_FTL"
 .PHONY : CMakeFiles/delivery_FTL.dir/all
 
 # Build rule for subdir invocation for target.
@@ -116,32 +99,6 @@ delivery_FTL: CMakeFiles/delivery_FTL.dir/rule
 CMakeFiles/delivery_FTL.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/delivery_FTL.dir/build.make CMakeFiles/delivery_FTL.dir/clean
 .PHONY : CMakeFiles/delivery_FTL.dir/clean
-
-#=============================================================================
-# Target rules for target class/CMakeFiles/cls.dir
-
-# All Build rule for target.
-class/CMakeFiles/cls.dir/all:
-	$(MAKE) $(MAKESILENT) -f class/CMakeFiles/cls.dir/build.make class/CMakeFiles/cls.dir/depend
-	$(MAKE) $(MAKESILENT) -f class/CMakeFiles/cls.dir/build.make class/CMakeFiles/cls.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles --progress-num=1,2 "Built target cls"
-.PHONY : class/CMakeFiles/cls.dir/all
-
-# Build rule for subdir invocation for target.
-class/CMakeFiles/cls.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 class/CMakeFiles/cls.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles 0
-.PHONY : class/CMakeFiles/cls.dir/rule
-
-# Convenience name for target.
-cls: class/CMakeFiles/cls.dir/rule
-.PHONY : cls
-
-# clean rule for target.
-class/CMakeFiles/cls.dir/clean:
-	$(MAKE) $(MAKESILENT) -f class/CMakeFiles/cls.dir/build.make class/CMakeFiles/cls.dir/clean
-.PHONY : class/CMakeFiles/cls.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

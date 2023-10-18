@@ -3,8 +3,3 @@
 /Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles/package_source.dir
 /Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles/edit_cache.dir
 /Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/CMakeFiles/rebuild_cache.dir
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/class/CMakeFiles/cls.dir
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/class/CMakeFiles/package.dir
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/class/CMakeFiles/package_source.dir
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/class/CMakeFiles/edit_cache.dir
-/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/class/CMakeFiles/rebuild_cache.dir

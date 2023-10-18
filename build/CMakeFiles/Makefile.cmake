@@ -11,7 +11,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.27.3/CMakeCCompiler.cmake"
   "CMakeFiles/3.27.3/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.27.3/CMakeSystem.cmake"
-  "/Users/ilababakov/Documents/code/study_solutions/prac/delivery/class/CMakeLists.txt"
   "/usr/local/Cellar/cmake/3.27.3/share/cmake/Modules/CMakeCInformation.cmake"
   "/usr/local/Cellar/cmake/3.27.3/share/cmake/Modules/CMakeCXXInformation.cmake"
   "/usr/local/Cellar/cmake/3.27.3/share/cmake/Modules/CMakeCommonLanguageInclude.cmake"
@@ -44,11 +43,9 @@ set(CMAKE_MAKEFILE_OUTPUTS
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
   "CMakeFiles/CMakeDirectoryInformation.cmake"
-  "class/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/delivery_FTL.dir/DependInfo.cmake"
-  "class/CMakeFiles/cls.dir/DependInfo.cmake"
   )

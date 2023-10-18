@@ -6,10 +6,6 @@
 			[
 				{
 					"build" : ".",
-					"childIndexes" : 
-					[
-						1
-					],
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
@@ -17,21 +13,6 @@
 					},
 					"projectIndex" : 0,
 					"source" : ".",
-					"targetIndexes" : 
-					[
-						1
-					]
-				},
-				{
-					"build" : "class",
-					"jsonFile" : "directory-class-Debug-943a6d49c962ebc75cfb.json",
-					"minimumCMakeVersion" : 
-					{
-						"string" : "3.27.3"
-					},
-					"parentIndex" : 0,
-					"projectIndex" : 0,
-					"source" : "class",
 					"targetIndexes" : 
 					[
 						0
@@ -44,26 +25,17 @@
 				{
 					"directoryIndexes" : 
 					[
-						0,
-						1
+						0
 					],
 					"name" : "delivery_FTL",
 					"targetIndexes" : 
 					[
-						0,
-						1
+						0
 					]
 				}
 			],
 			"targets" : 
 			[
-				{
-					"directoryIndex" : 1,
-					"id" : "cls::@b6006207bac832bbf61c",
-					"jsonFile" : "target-cls-Debug-cc0809b7989c1ad49aef.json",
-					"name" : "cls",
-					"projectIndex" : 0
-				},
 				{
 					"directoryIndex" : 0,
 					"id" : "delivery_FTL::@6890427a1f51a3e7e1df",

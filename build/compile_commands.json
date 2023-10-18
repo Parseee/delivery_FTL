@@ -4,11 +4,5 @@
   "command": "/usr/bin/clang++   -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -o CMakeFiles/delivery_FTL.dir/main.cpp.o -c /Users/ilababakov/Documents/code/study_solutions/prac/delivery/main.cpp",
   "file": "/Users/ilababakov/Documents/code/study_solutions/prac/delivery/main.cpp",
   "output": "CMakeFiles/delivery_FTL.dir/main.cpp.o"
-},
-{
-  "directory": "/Users/ilababakov/Documents/code/study_solutions/prac/delivery/build/class",
-  "command": "/usr/bin/clang++   -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -o CMakeFiles/cls.dir/courier.cpp.o -c /Users/ilababakov/Documents/code/study_solutions/prac/delivery/class/courier.cpp",
-  "file": "/Users/ilababakov/Documents/code/study_solutions/prac/delivery/class/courier.cpp",
-  "output": "class/CMakeFiles/cls.dir/courier.cpp.o"
 }
 ]
