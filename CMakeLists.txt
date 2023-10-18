@@ -1,11 +1,7 @@
 cmake_minimum_required(VERSION 3.27.3)
 project(delivery_FTL VERSION 0.1.0 LANGUAGES C CXX)
 
-include(CTest)
-enable_testing()
-
+add_subdirectory(class)
 add_executable(delivery_FTL main.cpp)
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+target_link_libraries(main PUBLIC cls)
