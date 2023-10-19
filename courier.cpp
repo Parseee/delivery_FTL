@@ -11,6 +11,7 @@ void Courier::setRequest(Request request) {
 }
 
 void Courier::startRequest(Request request) {
+  //current_request = pending.front()
   current_request = request;
   actual_time_ = average_time_ + deviation;
   is_free_ = false;
