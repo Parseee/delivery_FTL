@@ -23,7 +23,7 @@ class Courier {
   bool is_car_;
   int average_time_;
 
-  std::queue<Request> pending_request_;
+  std::priority_queue<Request, std::vector<int>, std::greater<request>> pending_request_;
   std::vector<Request> completed_request_;
   Request current_request;
   int current_location_;
