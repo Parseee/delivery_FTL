@@ -1,10 +1,7 @@
-
-#include "courier.h"
-
-#include <vector>
-
-#include "request.h"
-
+//#include "courier.h"
+//#include <vector>
+//#include "request.h"
+/*
 void Courier::setRequest(Request request) {
   pending_request_.push(request);
   return;
@@ -29,3 +26,4 @@ void Courier::Update() {
   }
   return;
 }
+*/
