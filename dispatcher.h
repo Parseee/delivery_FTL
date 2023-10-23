@@ -3,6 +3,7 @@
 #include "request.h"
 #include "default_courier.h"
 #include "car_courier.h"
+#include "database.h"
 #include "branch.h"
 #include <vector>
 #include <random>
@@ -20,6 +21,9 @@ class Dispatcher {
 
     void set_time_multiplier(int mult);
     time_t get_current_time() const;
+    int get_simulated_time() const;
+    int get_days() const;
+    void tick();
 
     Request create_new_request ();
     void assign_new_request(Request request);
@@ -33,16 +37,20 @@ class Dispatcher {
 
  private: 
     std::priority_queue < Courier * > couriers_;
-    std::vector < Branch * >  branches_;
-    int time_multiplier_;
+    // std::vector < Branch * >  branches_;
     time_t time0;
+    int days_;
+    int simulated_time_;
+    int time_multiplier_;
     std::mt19937 generator;
 };
 
 
 Dispatcher::Dispatcher(int default_courier_amount, 
         int car_courier_amount) : time_multiplier_(DEFAULT_TIME_MULTIPLIER), 
-                                  generator(std::random_device()()) { // snatched from the depths of the internet
+                                  generator(std::random_device()()),
+                                  simulated_time_(0),
+                                  days_(0) { // snatched from the depths of the internet
     if (default_courier_amount + car_courier_amount > 7) {
         throw std::logic_error("Too much couriers");
     }
@@ -62,6 +70,18 @@ void Dispatcher::set_time_multiplier(int mult) {
 
 time_t Dispatcher::get_current_time() const {
     return (time(nullptr)) * time_multiplier_;
+}
+
+int Dispatcher::get_simulated_time() const {
+    return simulated_time_;
+}
+
+int Dispatcher::get_days() const {
+    return days_;
+}
+
+void Dispatcher::tick() {
+    simulated_time_ += 2;
 }
 
 // edit end_time

@@ -7,12 +7,16 @@
 #include "dispatcher.h"
 #include "request.h"
 
-#define DEBUG
+// i'm adding 2 minutes every iteration so 8hr * 60min
+#define WEEK_DAY_MINUTES 480
+#define WEEK_DAYS 5
 
-// please use mt as randomizer!!!
+#define RELEASE
+
+// please use mt as randomizer!!! -- implemented
 
 // i think its need to use vector with current active couriers to update status (and location) 
-// for each courier
+// for each courier -- using priority_queue
 
 #ifdef DEBUG
 int TEST_DEFAULT_COURIER_AMOUNT = 2;
@@ -21,16 +25,23 @@ int TEST_CAR_COURIER_AMOUNT = 2;
 
 int main() {
     // some code for gui
-    Dispatcher dispatcher(TEST_DEFAULT_COURIER_AMOUNT, TEST_CAR_COURIER_AMOUNT);
-    time_t start_time = time(nullptr);
 
-#ifdef RELEASE
-    while (std::difftime(dispatcher.get_current_time(), start_time) < 128 /* the number is abstract */) {
-        // create, assign and process request etc...        
+    // time_t start_time = time(nullptr); // deprecated
+
+#ifndef DEBUG
+    // somehow get default and car courier amount here
+    Dispatcher dispatcher(2, 2);
+    while (dispatcher.get_days() < WEEK_DAYS) {
+        while (dispatcher.get_simulated_time() < WEEK_DAY_MINUTES) {
+            dispatcher.assign_new_request(dispatcher.create_new_request());
+            dispatcher.tick();
+        }
     }
 #endif
 
 #ifdef DEBUG
+    Dispatcher dispatcher(TEST_DEFAULT_COURIER_AMOUNT, TEST_CAR_COURIER_AMOUNT);
+
     dispatcher.assign_new_request(dispatcher.create_new_request());
     dispatcher.assign_new_request(dispatcher.create_new_request());
 
