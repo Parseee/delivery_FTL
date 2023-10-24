@@ -11,11 +11,11 @@
 #define WEEK_DAY_MINUTES 480
 #define WEEK_DAYS 5
 
-#define RELEASE
+#define DEBUG
 
 #ifdef DEBUG
-int TEST_DEFAULT_COURIER_AMOUNT = 2;
-int TEST_CAR_COURIER_AMOUNT = 2;
+int TEST_DEFAULT_COURIER_AMOUNT = 1;
+int TEST_CAR_COURIER_AMOUNT = 1;
 #endif
 
 int main() {
@@ -38,21 +38,23 @@ int main() {
 #ifdef DEBUG
     Dispatcher dispatcher(TEST_DEFAULT_COURIER_AMOUNT, TEST_CAR_COURIER_AMOUNT);
 
-    dispatcher.assign_new_request(dispatcher.create_new_request());
-    dispatcher.assign_new_request(dispatcher.create_new_request());
+    try {
+        dispatcher.assign_new_request(dispatcher.create_new_request());
+        dispatcher.assign_new_request(dispatcher.create_new_request());
+    } catch (const std::logic_error& e) {
+        std::cout << e.what() << '\n';
+    }
 
     for (int i = 0; i < TEST_DEFAULT_COURIER_AMOUNT + TEST_CAR_COURIER_AMOUNT;
          ++i) {
         try {
-            Courier* courier = dispatcher.get_last_courier_and_kill();
             std::cout << "Courier sucsessfully got\n";
-            std::cout << courier->is_car() << '\n';
+            Courier *courier = dispatcher.get_last_courier_and_kill();
             std::cout << courier->get_curent_request().start_time << '\n';
             delete courier;
         } catch (const std::logic_error& e) {
             std::cout << e.what() << '\n';
         }
     }
-
 #endif
 }

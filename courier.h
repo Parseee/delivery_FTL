@@ -19,8 +19,6 @@ class Courier {
     void add_new_request(Request request);
     Request give_away_current_request();
 
-    bool operator<(Courier& courier);
-
  protected:
 
     unsigned int number_;
@@ -50,10 +48,6 @@ Courier::Courier(Courier&& courier) : number_(courier.number_),
     courier.delivery_duration = 0;
     courier.current_location_ = 0;
     courier.consumed_time_ = 0;
-}
-
-bool Courier::operator<(Courier& courier) {
-    return this->get_curent_request().end_time > courier.get_curent_request().end_time;
 }
 
 Request Courier::get_curent_request() {
