@@ -1,14 +1,13 @@
 #pragma once
 
+#include <climits>
 #include <random>
 #include <vector>
-#include <climits>
 
 #ifdef DEBUG
 #include <iostream>
 #endif
 
-#include "branch.h"
 #include "car_courier.h"
 #include "default_courier.h"
 #include "request.h"
@@ -47,8 +46,9 @@ class Dispatcher {
 #endif
 
    private:
-    std::vector <Courier*> couriers_;
-    std::vector < std::vector < std::pair < int, int > > > branches_; // must be filled with adjacency list
+    std::vector<Courier*> couriers_;
+    std::vector<std::vector<std::pair<int, int> > >
+        branches_;  // must be filled with adjacency list
     // std::vector < Branch * >  branches_;
     time_t time0;
     int days_;
@@ -74,7 +74,8 @@ Dispatcher::Dispatcher(int default_courier_amount, int car_courier_amount)
             new CarCourier(courier_number++, i));  // make good numbers
     }
 
-    branches_ = std::vector < std::vector < std::pair < int, int > > > {{{1, 1}, {2, 2}}, {{0, 1}, {2, 1}}, {{0, 2}, {1, 1}}};
+    branches_ = std::vector<std::vector<std::pair<int, int> > >{
+        {{1, 1}, {2, 2}}, {{0, 1}, {2, 1}}, {{0, 2}, {1, 1}}};
     time0 = time(nullptr);
 }
 
@@ -88,9 +89,9 @@ int Dispatcher::get_simulated_time() const { return simulated_time_; }
 
 int Dispatcher::get_days() const { return days_; }
 
-void Dispatcher::tick() { 
+void Dispatcher::tick() {
     simulated_time_ += 1;
-    
+
     for (auto courier : couriers_) {
         if (courier->get_curent_request().end_time <= get_simulated_time()) {
             courier->give_away_current_request();
@@ -105,8 +106,8 @@ void Dispatcher::update_days() {
 }
 
 Courier* Dispatcher::get_courier(int start_loc) {
-    std::vector < int > distance(branches_.size(), INT32_MAX);
-    std::priority_queue < std::pair < int, int > > q;
+    std::vector<int> distance(branches_.size(), INT32_MAX);
+    std::priority_queue<std::pair<int, int> > q;
 
     distance[start_loc] = 0;
     q.push({0, start_loc});
@@ -137,9 +138,9 @@ Courier* Dispatcher::get_courier(int start_loc) {
 #endif
 
     int preferable_distance = INT_MAX;
-    Courier *preferable_courier = nullptr;
+    Courier* preferable_courier = nullptr;
 
-    for (auto *courier : couriers_) {
+    for (auto* courier : couriers_) {
         if (distance[courier->get_location()] < preferable_distance) {
             preferable_distance = distance[courier->get_location()];
             preferable_courier = courier;
@@ -156,7 +157,7 @@ Request Dispatcher::create_new_request() {
 }
 
 void Dispatcher::assign_new_request(Request request) {
-    Courier *courier = get_courier(request.source);
+    Courier* courier = get_courier(request.source);
     if (courier == nullptr) {
         throw std::logic_error("No courier here!");
     }
