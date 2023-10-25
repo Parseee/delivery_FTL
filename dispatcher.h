@@ -88,7 +88,16 @@ int Dispatcher::get_simulated_time() const { return simulated_time_; }
 
 int Dispatcher::get_days() const { return days_; }
 
-void Dispatcher::tick() { simulated_time_ += 1; }
+void Dispatcher::tick() { 
+    simulated_time_ += 1;
+    
+    for (auto courier : couriers_) {
+        if (courier->get_curent_request().end_time <= get_simulated_time()) {
+            courier->give_away_current_request();
+            // anything else?
+        }
+    }
+}
 
 void Dispatcher::update_days() {
     simulated_time_ = 0;
