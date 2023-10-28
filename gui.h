@@ -7,7 +7,9 @@ class Line {
    public:
     Line() = default;
     Line(double x1, double y1, double x2, double y2) {}
-    void draw(sf::RenderWindow &window);
+    void draw(sf::RenderWindow &window){
+        return;
+    }
 
    private:
     int length_;
