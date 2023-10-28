@@ -6,6 +6,8 @@
 #include "gui.h"
 
 std::vector<Branch *> branches;
+std::vector<std::pair<Branch *, Branch *>> branches_list;
+double mouse_x, mouse_y;
 
 extern int default_courier_amount, car_courier_amount;
 
@@ -81,12 +83,9 @@ void Interface(sf::RenderWindow &window) {
 
     Text current_time_text(30, 760, 30, "TIME ");
     current_time_text.draw(window);
-
-    Text temp(350, 30, 25, "t");
-    temp.draw(window);
 }
 
-void HandleEvent(sf::Event event, sf::RenderWindow &window) {
+void HandleEvent(sf::Event event) {
     if (interval_field_first.getText().length() == 0)
         interval_field_first.updateText("2");
     if (interval_field_second.getText().length() == 0)
@@ -192,18 +191,21 @@ void HandleEvent(sf::Event event, sf::RenderWindow &window) {
             if (event.mouseButton.x >= 350) {
                 bool is_branch = false;
                 for (int i = 0; i < branches.size(); ++i) {
-                    if (branches[i]->isClicked(event) ||
-                        branches[i]->isActive()) {
+                    if (branches[i]->isClicked(event)) {
                         is_branch = true;
                         branches[i]->clicked();
                         break;
                     }
                 }
                 if (!is_branch) {
+                    Branch *prev = nullptr;
                     for (int i = 0; i < branches.size(); ++i) {
+                        if (branches[i]->isActive() && prev == nullptr)
+                            prev = branches[i];
                         branches[i]->notClicked();
                     }
-                    CreateBranch(event.mouseButton.x, event.mouseButton.y);
+                    CreateBranch(event.mouseButton.x, event.mouseButton.y,
+                                 prev);
                 }
             }
         }
@@ -235,23 +237,38 @@ void HandleEvent(sf::Event event, sf::RenderWindow &window) {
             }
         }
     } else if (event.type == sf::Event::MouseMoved) {
-        for (int i = 0; i < branches.size(); ++i) {
-            if (branches[i]->isActive()) {
-                Line line(branches[i]->getX(), branches[i]->getY(),
-                          event.mouseMove.x, event.mouseMove.y);
-                line.draw(window);
-            }
-        }
+        mouse_x = event.mouseMove.x;
+        mouse_y = event.mouseMove.y;
     }
 }
 
-void CreateBranch(double x, double y) {
-    Branch *new_branch = new Branch(x, y, (int)branches.size() + 1);
+void CreateBranch(double x, double y, Branch *&prev) {
+    Branch *new_branch =
+        new Branch(x - 75 / 2.0, y - 45 / 2.0, (int)branches.size() + 1);
     branches.push_back(new_branch);
+    if (prev != nullptr) {
+        branches_list.push_back({new_branch, prev});
+    }
 }
 
 void DrawBranches(sf::RenderWindow &window) {
     for (int i = 0; i < branches.size(); ++i) {
         branches[i]->draw(window);
+    }
+    for (int i = 0; i < branches_list.size(); ++i) {
+        auto br = branches_list[i];
+        Line line(br.first->getX() + 75 / 2.0, br.first->getY() + 45 / 2.0,
+                  br.second->getX() + 75 / 2.0, br.second->getY() + 45 / 2.0);
+        line.draw(window);
+    }
+}
+
+void CheckLines(sf::RenderWindow &window) {
+    for (int i = 0; i < branches.size(); ++i) {
+        if (branches[i]->isActive()) {
+            Line line(branches[i]->getX() + 75 / 2.0,
+                      branches[i]->getY() + 45 / 2.0, mouse_x, mouse_y);
+            line.draw(window);
+        }
     }
 }

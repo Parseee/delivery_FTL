@@ -6,8 +6,8 @@
 #include "car_courier.h"
 #include "default_courier.h"
 #include "dispatcher.h"
-#include "interface.h"
 #include "gui.h"
+#include "interface.h"
 #include "request.h"
 
 #define WEEK_DAY_MINUTES 480
@@ -31,7 +31,10 @@ int main() {
     sf::Event event;
     Dispatcher dispatcher;
     dispatcher.set_dispatcher(0, 0);
+    sf::Time elapsedTime;
+    sf::Clock clock;
     while (window.isOpen()) {
+        window.clear(sf::Color::White);
         // while (dispatcher.get_days() < WEEK_DAYS) {
         //     while (dispatcher.get_simulated_time() < WEEK_DAY_MINUTES) {
         //         dispatcher.assign_new_request(dispatcher.create_new_request());
@@ -40,9 +43,13 @@ int main() {
         //     dispatcher.update_days();
         // }
         while (window.pollEvent(event)) {
-            HandleEvent(event, window);
+            HandleEvent(event);
         }
-        window.clear(sf::Color::White);
+        elapsedTime = clock.getElapsedTime();
+        if (elapsedTime > sf::milliseconds(10)) {
+            CheckLines(window);
+            elapsedTime = clock.restart();
+        }
         Interface(window);
         DrawBranches(window);
         window.display();

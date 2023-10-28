@@ -1,20 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <cmath>
 #include <string>
 
-class Line {
-   public:
-    Line() = default;
-    Line(double x1, double y1, double x2, double y2) {}
-    void draw(sf::RenderWindow &window){
-        return;
-    }
-
-   private:
-    int length_;
-    // angle_
-};
+#define PI 3.1415
 
 class Text {
    public:
@@ -51,6 +41,19 @@ class Text {
     std::string text_;
     sf::Color color_ = sf::Color::Black;
     double size_;
+};
+
+class Line {
+   public:
+    Line() = default;
+    Line(double x1, double y1, double x2, double y2);
+    void draw(sf::RenderWindow &window);
+
+   private:
+    double x_, y_;
+    double length_;
+    double angle_;
+    Text num_;
 };
 
 class Field {

@@ -72,3 +72,36 @@ void InputField::draw(sf::RenderWindow &window) {
     window.draw(button);
     text_.draw(window);
 }
+
+void Line::draw(sf::RenderWindow &window) {
+    sf::RectangleShape shape;
+    shape.move(x_, y_);
+    shape.setFillColor(sf::Color::Black);
+    shape.setSize(sf::Vector2f(length_, 2));
+    shape.setRotation(angle_);
+    num_.draw(window);
+    window.draw(shape);
+}
+
+Line::Line(double x1, double y1, double x2, double y2) {
+    x_ = x1;
+    y_ = y1;
+    length_ = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    if (x2 >= x1 && y2 >= y1) {
+        angle_ = atan(fabs(y1 - y2) / fabs(x1 - x2)) * 180.0 / PI;
+        num_.setData((x1 + x2) / 2.0 + 20, (y1 + y2) / 2.0 - 20, 18,
+                     std::to_string((int)ceil(length_) / 10));
+    } else if (x2 <= x1 && y2 >= y1) {
+        angle_ = atan(fabs(x1 - x2) / fabs(y1 - y2)) * 180.0 / PI + 90;
+        num_.setData((x1 + x2) / 2.0 - 20, (y1 + y2) / 2.0 - 20, 18,
+                     std::to_string((int)ceil(length_) / 10));
+    } else if (x2 <= x1 && y2 <= y1) {
+        num_.setData((x1 + x2) / 2.0 + 20, (y1 + y2) / 2.0, 18 - 20,
+                     std::to_string((int)ceil(length_) / 10));
+        angle_ = atan(fabs(y1 - y2) / fabs(x1 - x2)) * 180.0 / PI + 180;
+    } else if (x2 >= x1 && y2 <= y1) {
+        num_.setData((x1 + x2) / 2.0 - 20, (y1 + y2) / 2.0 - 20, 18,
+                     std::to_string((int)ceil(length_) / 10));
+        angle_ = atan(fabs(x1 - x2) / fabs(y1 - y2)) * 180.0 / PI + 270;
+    }
+}
