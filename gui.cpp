@@ -38,32 +38,7 @@ void Field::draw(sf::RenderWindow &window) {
     text_.draw(window);
 }
 
-void InputField::clicked(sf::Event event) {
-    if (event.type == sf::Event::MouseButtonPressed) {
-        if (event.mouseButton.button == sf::Mouse::Left) {
-            double mouse_x = event.mouseButton.x;
-            double mouse_y = event.mouseButton.y;
-            if (mouse_x >= x_ && mouse_x <= x_ + width_ && mouse_y >= y_ &&
-                mouse_y <= y_ + height_) {
-                is_active_ = true;
-            }
-        }
-    }
-}
-
-void InputField::draw(sf::RenderWindow &window) {
-    sf::RectangleShape button;
-    button.move(x_, y_);
-    button.setFillColor(color_);
-    button.setSize(sf::Vector2f(width_, height_));
-    button.setOutlineThickness(2);
-    button.setOutlineColor(sf::Color::Black);
-    window.draw(button);
-    text_.draw(window);
-    ok_button.draw(window);
-}
-
-bool Button::isClicked(sf::Event event) {
+bool Field::isClicked(sf::Event event) {
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Left) {
             double mouse_x = event.mouseButton.x;
@@ -75,4 +50,25 @@ bool Button::isClicked(sf::Event event) {
         }
     }
     return false;
+}
+
+void InputField::clicked() {
+    is_active_ = true;
+    this->setColor(sf::Color(169, 169, 169));
+}
+
+void InputField::notClicked() {
+    is_active_ = false;
+    this->setColor(sf::Color(211, 211, 211));
+}
+
+void InputField::draw(sf::RenderWindow &window) {
+    sf::RectangleShape button;
+    button.move(x_, y_);
+    button.setFillColor(color_);
+    button.setSize(sf::Vector2f(width_, height_));
+    button.setOutlineThickness(2);
+    button.setOutlineColor(sf::Color::Black);
+    window.draw(button);
+    text_.draw(window);
 }

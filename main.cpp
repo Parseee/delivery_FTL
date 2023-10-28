@@ -13,6 +13,8 @@
 #define WEEK_DAY_MINUTES 480
 #define WEEK_DAYS 5
 
+int default_courier_amount = 0, car_courier_amount = 0;
+
 // рандомизировать создание заявки
 
 #ifdef DEBUG
@@ -27,7 +29,8 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Delivery");
 
     sf::Event event;
-    Dispatcher dispatcher(2, 2);
+    Dispatcher dispatcher;
+    dispatcher.set_dispatcher(0, 0);
     while (window.isOpen()) {
         // while (dispatcher.get_days() < WEEK_DAYS) {
         //     while (dispatcher.get_simulated_time() < WEEK_DAY_MINUTES) {
@@ -37,9 +40,11 @@ int main() {
         //     dispatcher.update_days();
         // }
         while (window.pollEvent(event)) {
+            HandleEvent(event, window);
         }
         window.clear(sf::Color::White);
         Interface(window);
+        DrawBranches(window);
         window.display();
     }
 #endif

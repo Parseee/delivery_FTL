@@ -21,10 +21,11 @@ const int SECONDS = 1800;
 
 class Dispatcher {
    public:
-    Dispatcher(int, int);
+    Dispatcher() = default;
     Dispatcher(const Dispatcher&) = delete;
     Dispatcher(Dispatcher&&) = delete;
 
+    void set_dispatcher(int, int);
     void set_time_multiplier(int);
     time_t get_current_time() const;
     int get_simulated_time() const;
@@ -57,11 +58,14 @@ class Dispatcher {
     std::mt19937 generator;
 };
 
-Dispatcher::Dispatcher(int default_courier_amount, int car_courier_amount)
-    : time_multiplier_(DEFAULT_TIME_MULTIPLIER),
-      generator(std::random_device()()),
-      simulated_time_(0),
-      days_(0) {
+void Dispatcher::set_dispatcher(int default_courier_amount,
+                                int car_courier_amount) {
+    time_multiplier_ = DEFAULT_TIME_MULTIPLIER;
+    std::random_device device;
+    generator.seed(device());
+
+    simulated_time_ = 0;
+    days_ = 0;
     if (default_courier_amount + car_courier_amount > 7) {
         throw std::logic_error("Too much couriers");
     }
