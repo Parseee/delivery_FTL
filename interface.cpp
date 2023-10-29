@@ -5,6 +5,15 @@
 
 #include "gui.h"
 
+/*
+возможно изменить шрифт на моношир
+сделать нормальную обработку событий
+расстановка курьеров
+рандомизация заявок
+прописать изменение локации курьеров
+возможно пофиксить фичу (не баг) с линиями
+*/
+
 std::vector<Branch *> branches;
 std::vector<std::pair<Branch *, Branch *>> branches_list;
 double mouse_x, mouse_y;
@@ -29,6 +38,8 @@ Button deviation_plus_first(125, 445, 20, 20);
 Button deviation_minus_second(25, 485, 20, 20);
 InputField deviation_field_second(60, 480, 50, 30);
 Button deviation_plus_second(125, 485, 20, 20);
+
+Button set_couriers(30, 650, 230, 70);
 
 Button start_button(30, 810, 70, 70);
 Button pause_button(110, 810, 70, 70);
@@ -80,6 +91,10 @@ void Interface(sf::RenderWindow &window) {
     deviation_field_second.draw(window);
     deviation_minus_second.setImage("images/minus.png");
     deviation_minus_second.draw(window);
+
+    set_couriers.setText("Set couriers", 25);
+    set_couriers.setColor(sf::Color(169, 169, 169));
+    set_couriers.draw(window);
 
     Text current_time_text(30, 760, 30, "TIME ");
     current_time_text.draw(window);
@@ -204,6 +219,7 @@ void HandleEvent(sf::Event event) {
                             prev = branches[i];
                         branches[i]->notClicked();
                     }
+                    // feature
                     CreateBranch(event.mouseButton.x, event.mouseButton.y,
                                  prev);
                 }
@@ -252,14 +268,14 @@ void CreateBranch(double x, double y, Branch *&prev) {
 }
 
 void DrawBranches(sf::RenderWindow &window) {
-    for (int i = 0; i < branches.size(); ++i) {
-        branches[i]->draw(window);
-    }
     for (int i = 0; i < branches_list.size(); ++i) {
         auto br = branches_list[i];
         Line line(br.first->getX() + 75 / 2.0, br.first->getY() + 45 / 2.0,
                   br.second->getX() + 75 / 2.0, br.second->getY() + 45 / 2.0);
         line.draw(window);
+    }
+    for (int i = 0; i < branches.size(); ++i) {
+        branches[i]->draw(window);
     }
 }
 

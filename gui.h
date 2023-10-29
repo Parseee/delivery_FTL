@@ -74,7 +74,7 @@ class Field {
     virtual void draw(sf::RenderWindow &window);
     virtual void setText(std::string text, int size,
                          sf::Color color = sf::Color::Black) {
-        double x = x_ + (width_ - text.length() * (int)(size / 1.6)) / 2.0;
+        double x = x_ + (width_ - text.length() * size / 1.6180339887) / 2.0;
         double y = y_ + (height_ - size) / 2.0;
         text_.setData(x, y, size, text, color);
     }

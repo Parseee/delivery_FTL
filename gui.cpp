@@ -3,15 +3,17 @@
 #include <SFML/Graphics.hpp>
 
 void Text::draw(sf::RenderWindow &window) {
-    sf::Font font;
-    if (font.loadFromFile("Gilroy-Semibold.ttf")) {
-        sf::Text text;
-        text.setFont(font);
-        text.setString(text_);
-        text.setCharacterSize(size_);
-        text.setFillColor(color_);
-        text.setPosition(x_, y_);
-        window.draw(text);
+    if (text_.length() != 0) {
+        sf::Font font;
+        if (font.loadFromFile("Gilroy-Semibold.ttf")) {
+            sf::Text text;
+            text.setFont(font);
+            text.setString(text_);
+            text.setCharacterSize(size_);
+            text.setFillColor(color_);
+            text.setPosition(x_, y_);
+            window.draw(text);
+        }
     }
 }
 
@@ -93,14 +95,14 @@ Line::Line(double x1, double y1, double x2, double y2) {
                      std::to_string((int)ceil(length_) / 10));
     } else if (x2 <= x1 && y2 >= y1) {
         angle_ = atan(fabs(x1 - x2) / fabs(y1 - y2)) * 180.0 / PI + 90;
-        num_.setData((x1 + x2) / 2.0 - 20, (y1 + y2) / 2.0 - 20, 18,
+        num_.setData((x1 + x2) / 2.0 - 40, (y1 + y2) / 2.0 - 20, 18,
                      std::to_string((int)ceil(length_) / 10));
     } else if (x2 <= x1 && y2 <= y1) {
-        num_.setData((x1 + x2) / 2.0 + 20, (y1 + y2) / 2.0, 18 - 20,
+        num_.setData((x1 + x2) / 2.0 + 20, (y1 + y2) / 2.0 - 20, 18,
                      std::to_string((int)ceil(length_) / 10));
         angle_ = atan(fabs(y1 - y2) / fabs(x1 - x2)) * 180.0 / PI + 180;
     } else if (x2 >= x1 && y2 <= y1) {
-        num_.setData((x1 + x2) / 2.0 - 20, (y1 + y2) / 2.0 - 20, 18,
+        num_.setData((x1 + x2) / 2.0 - 40, (y1 + y2) / 2.0 - 20, 18,
                      std::to_string((int)ceil(length_) / 10));
         angle_ = atan(fabs(x1 - x2) / fabs(y1 - y2)) * 180.0 / PI + 270;
     }

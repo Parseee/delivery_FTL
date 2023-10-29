@@ -15,8 +15,6 @@
 
 int default_courier_amount = 0, car_courier_amount = 0;
 
-// рандомизировать создание заявки
-
 #ifdef DEBUG
 int TEST_DEFAULT_COURIER_AMOUNT = 1;
 int TEST_CAR_COURIER_AMOUNT = 1;
@@ -43,6 +41,7 @@ int main() {
         //     dispatcher.update_days();
         // }
         while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) window.close();
             HandleEvent(event);
         }
         elapsedTime = clock.getElapsedTime();
