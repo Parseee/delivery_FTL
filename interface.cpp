@@ -1,8 +1,10 @@
 #include "interface.h"
 
+#include <map>
 #include <string>
 #include <vector>
 
+#include "courier.h"
 #include "gui.h"
 
 /*
@@ -12,13 +14,19 @@
 рандомизация заявок
 прописать изменение локации курьеров
 возможно пофиксить фичу (не баг) с линиями
+кнопка ускорение и замедление
+разобраться с нумерацией
 */
 
 std::vector<Branch *> branches;
 std::vector<std::pair<Branch *, Branch *>> branches_list;
+std::vector<std::pair<int, int>> car_courier_list;
+std::vector<std::pair<int, int>> default_courier_list;
+std::map<int, Branch *> branches_map;
+
 double mouse_x, mouse_y;
 
-extern int default_courier_amount, car_courier_amount;
+int default_courier_amount = 0, car_courier_amount = 0;
 
 Button input_by_car_button(140, 55, 30, 30);
 Button input_foot_button(140, 140, 30, 30);
@@ -101,6 +109,13 @@ void Interface(sf::RenderWindow &window) {
 }
 
 void HandleEvent(sf::Event event) {
+    if (event.type == sf::Event::MouseMoved) {
+        mouse_x = event.mouseMove.x;
+        mouse_y = event.mouseMove.y;
+    }
+}
+
+void HandleIntervals(sf::Event event) {
     if (interval_field_first.getText().length() == 0)
         interval_field_first.updateText("2");
     if (interval_field_second.getText().length() == 0)
@@ -112,43 +127,6 @@ void HandleEvent(sf::Event event) {
 
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Left) {
-            if (input_by_car_button.isClicked(event) ||
-                !input_by_car.isClicked(event)) {
-                input_by_car.notClicked();
-                if (input_by_car.getText().length() == 0)
-                    car_courier_amount = 0;
-                else
-                    car_courier_amount = std::stoi(input_by_car.getText());
-            } else
-                input_by_car.clicked();
-            if (input_foot_button.isClicked(event) ||
-                !input_foot.isClicked(event)) {
-                input_foot.notClicked();
-                if (input_foot.getText().length() == 0)
-                    default_courier_amount = 0;
-                else
-                    default_courier_amount = std::stoi(input_foot.getText());
-            } else
-                input_foot.clicked();
-
-            // if (interval_field_first.isClicked(event))
-            //     interval_field_first.clicked();
-            // else
-            //     interval_field_first.notClicked();
-            // if (interval_field_second.isClicked(event))
-            //     interval_field_second.clicked();
-            // else
-            //     interval_field_second.notClicked();
-
-            // if (deviation_field_first.isClicked(event))
-            //     deviation_field_first.clicked();
-            // else
-            //     deviation_field_first.notClicked();
-            // if (deviation_field_second.isClicked(event))
-            //     deviation_field_second.clicked();
-            // else
-            //     deviation_field_second.notClicked();
-
             if (interval_minus_first.isClicked(event)) {
                 std::string str = interval_field_first.getText();
                 int num = std::stoi(str);
@@ -202,7 +180,67 @@ void HandleEvent(sf::Event event) {
                 ++num;
                 deviation_field_second.updateText(std::to_string(num));
             }
+        }
+    }
+}
 
+void HandleInputs(sf::Event event) {
+    if (event.type == sf::Event::MouseButtonPressed) {
+        if (event.mouseButton.button == sf::Mouse::Left) {
+            if (input_by_car_button.isClicked(event) ||
+                !input_by_car.isClicked(event)) {
+                input_by_car.notClicked();
+                if (input_by_car.getText().length() == 0)
+                    car_courier_amount = 0;
+                else
+                    car_courier_amount = std::stoi(input_by_car.getText());
+            } else
+                input_by_car.clicked();
+            if (input_foot_button.isClicked(event) ||
+                !input_foot.isClicked(event)) {
+                input_foot.notClicked();
+                if (input_foot.getText().length() == 0)
+                    default_courier_amount = 0;
+                else
+                    default_courier_amount = std::stoi(input_foot.getText());
+            } else
+                input_foot.clicked();
+        }
+    }
+    if (event.type == sf::Event::TextEntered) {
+        if (event.text.unicode >= '0' && event.text.unicode <= '9') {
+            char symb = static_cast<char>(event.text.unicode);
+            if (input_by_car.isActive()) {
+                if (std::stoi(input_by_car.getText() + symb) <= 5)
+                    input_by_car.updateText(input_by_car.getText() + symb);
+            } else if (input_foot.isActive()) {
+                if (std::stoi(input_foot.getText() + symb) <= 5)
+                    input_foot.updateText(input_foot.getText() + symb);
+            }
+        }
+    }
+    if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::BackSpace) {
+            if (input_by_car.isActive()) {
+                if (input_by_car.getText().length() > 0) {
+                    std::string str = input_by_car.getText().erase(
+                        input_by_car.getText().length() - 1, 1);
+                    input_by_car.updateText(str);
+                }
+            } else if (input_foot.isActive()) {
+                if (input_foot.getText().length() > 0) {
+                    std::string str = input_foot.getText().erase(
+                        input_foot.getText().length() - 1, 1);
+                    input_foot.updateText(str);
+                }
+            }
+        }
+    }
+}
+
+void HandleClickBranch(sf::Event event) {
+    if (event.type == sf::Event::MouseButtonPressed) {
+        if (event.mouseButton.button == sf::Mouse::Left) {
             if (event.mouseButton.x >= 350) {
                 bool is_branch = false;
                 for (int i = 0; i < branches.size(); ++i) {
@@ -225,36 +263,6 @@ void HandleEvent(sf::Event event) {
                 }
             }
         }
-    } else if (event.type == sf::Event::TextEntered) {
-        if (event.text.unicode >= '0' && event.text.unicode <= '9') {
-            char symb = static_cast<char>(event.text.unicode);
-            if (input_by_car.isActive()) {
-                if (std::stoi(input_by_car.getText() + symb) <= 5)
-                    input_by_car.updateText(input_by_car.getText() + symb);
-            } else if (input_foot.isActive()) {
-                if (std::stoi(input_foot.getText() + symb) <= 5)
-                    input_foot.updateText(input_foot.getText() + symb);
-            }
-        }
-    } else if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::BackSpace) {
-            if (input_by_car.isActive()) {
-                if (input_by_car.getText().length() > 0) {
-                    std::string str = input_by_car.getText().erase(
-                        input_by_car.getText().length() - 1, 1);
-                    input_by_car.updateText(str);
-                }
-            } else if (input_foot.isActive()) {
-                if (input_foot.getText().length() > 0) {
-                    std::string str = input_foot.getText().erase(
-                        input_foot.getText().length() - 1, 1);
-                    input_foot.updateText(str);
-                }
-            }
-        }
-    } else if (event.type == sf::Event::MouseMoved) {
-        mouse_x = event.mouseMove.x;
-        mouse_y = event.mouseMove.y;
     }
 }
 
@@ -262,6 +270,7 @@ void CreateBranch(double x, double y, Branch *&prev) {
     Branch *new_branch =
         new Branch(x - 75 / 2.0, y - 45 / 2.0, (int)branches.size() + 1);
     branches.push_back(new_branch);
+    branches_map[branches.size() - 1] = new_branch;
     if (prev != nullptr) {
         branches_list.push_back({new_branch, prev});
     }
@@ -287,4 +296,32 @@ void CheckLines(sf::RenderWindow &window) {
             line.draw(window);
         }
     }
+}
+
+bool HandleSetCouriers(sf::Event event) {
+    if (set_couriers.isClicked(event)) {
+        set_couriers.clicked();
+        return true;
+    }
+    if (set_couriers.isActive()) {
+        for (int i = 0; i < branches.size(); ++i) {
+            if (branches[i]->isClicked(event)) {
+                if (default_courier_list.size() < default_courier_amount) {
+                    default_courier_list.push_back(
+                        {default_courier_list.size() + car_courier_list.size(),
+                         branches[i]->getNum()});
+                } else if (car_courier_list.size() < car_courier_amount) {
+                    car_courier_list.push_back(
+                        {default_courier_list.size() + car_courier_list.size(),
+                         branches[i]->getNum()});
+                }
+                return true;
+            }
+        }
+    }
+    if (car_courier_list.size() == car_courier_amount &&
+        default_courier_list.size() == default_courier_amount) {
+        set_couriers.notClicked();
+    }
+    return false;
 }

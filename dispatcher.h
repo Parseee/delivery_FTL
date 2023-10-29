@@ -1,8 +1,8 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include <climits>
 #include <random>
-#include <vector>
 
 #ifdef DEBUG
 #include <iostream>
@@ -10,12 +10,17 @@
 
 #include "car_courier.h"
 #include "default_courier.h"
+#include "gui.h"
 #include "request.h"
 
 #define DEFAULT_TIME_MULTIPLIER 720
 
 #define REPLACE 1
 const int SECONDS = 1800;
+extern std::vector<std::pair<Branch*, Branch*>> branches_list;
+extern std::vector<Branch*> branches;
+extern std::vector<std::pair<int, int>> car_courier_list;
+extern std::vector<std::pair<int, int>> default_courier_list;
 
 #define DEPRECATED
 
@@ -25,7 +30,7 @@ class Dispatcher {
     Dispatcher(const Dispatcher&) = delete;
     Dispatcher(Dispatcher&&) = delete;
 
-    void set_dispatcher(int, int);
+    void set_dispatcher();
     void set_time_multiplier(int);
     time_t get_current_time() const;
     int get_simulated_time() const;
@@ -36,6 +41,8 @@ class Dispatcher {
     Courier* get_courier(int);
     Request create_new_request();
     void assign_new_request(Request);
+
+    void drawCouriers(sf::RenderWindow& window);
 
     // debug method
 #ifdef DEPRECATED
@@ -48,7 +55,7 @@ class Dispatcher {
 
    private:
     std::vector<Courier*> couriers_;
-    std::vector<std::vector<std::pair<int, int> > >
+    std::vector<std::vector<std::pair<int, int>>>
         branches_;  // must be filled with adjacency list
     // std::vector < Branch * >  branches_;
     time_t time0;
@@ -58,28 +65,41 @@ class Dispatcher {
     std::mt19937 generator;
 };
 
-void Dispatcher::set_dispatcher(int default_courier_amount,
-                                int car_courier_amount) {
+void Dispatcher::set_dispatcher() {
     time_multiplier_ = DEFAULT_TIME_MULTIPLIER;
-    std::random_device device;
-    generator.seed(device());
 
+    generator.seed(time(nullptr));
     simulated_time_ = 0;
     days_ = 0;
-    if (default_courier_amount + car_courier_amount > 7) {
-        throw std::logic_error("Too much couriers");
-    }
     int courier_number = 0;
-    for (size_t i = 0; i < default_courier_amount; ++i) {
-        couriers_.push_back(new DefaultCourier(courier_number++, i));
+    for (int i = 0; i < couriers_.size(); ++i) {
+        delete couriers_[i];
     }
-    for (size_t i = 0; i < car_courier_amount; ++i) {
+    couriers_.clear();
+    for (int i = 0; i < default_courier_list.size(); ++i) {
+        couriers_.push_back(new DefaultCourier(default_courier_list[i].first,
+                                               default_courier_list[i].second));
+    }
+    for (size_t i = 0; i < car_courier_list.size(); ++i) {
         couriers_.push_back(
-            new CarCourier(courier_number++, i));  // make good numbers
+            new CarCourier(car_courier_list[i].first,
+                           car_courier_list[i].second));  // make good numbers
     }
 
-    branches_ = std::vector<std::vector<std::pair<int, int> > >{
-        {{1, 1}, {2, 2}}, {{0, 1}, {2, 1}}, {{0, 2}, {1, 1}}};
+    branches_.clear();
+    branches_.resize(branches.size() + 1);
+    for (int i = 0; i < branches_list.size(); ++i) {
+        int a = branches_list[i].first->getNum();
+        int b = branches_list[i].second->getNum();
+        double x1 = branches_list[i].first->getX(),
+               y1 = branches_list[i].first->getY(),
+               x2 = branches_list[i].second->getX(),
+               y2 = branches_list[i].second->getY();
+        int len =
+            (int)ceil(sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))) / 10;
+        branches_[a].push_back({b, len});
+        branches_[b].push_back({a, len});
+    }
     time0 = time(nullptr);
 }
 
@@ -111,7 +131,7 @@ void Dispatcher::update_days() {
 
 Courier* Dispatcher::get_courier(int start_loc) {
     std::vector<int> distance(branches_.size(), INT32_MAX);
-    std::priority_queue<std::pair<int, int> > q;
+    std::priority_queue<std::pair<int, int>> q;
 
     distance[start_loc] = 0;
     q.push({0, start_loc});
@@ -167,4 +187,10 @@ void Dispatcher::assign_new_request(Request request) {
     }
     courier->add_new_request(request);
     courier->add_consumed_time(courier->get_delivery_duration());
+}
+
+void Dispatcher::drawCouriers(sf::RenderWindow& window) {
+    for (int i = 0; i < couriers_.size(); ++i) {
+        couriers_[i]->draw(window);
+    }
 }

@@ -140,7 +140,12 @@ class Branch : public Button {
         width_ = 75;
         this->setImage("images/branch.png");
         this->setText(std::to_string(number), 25);
+        num_ = number;
     }
     double getX() { return x_; }
     double getY() { return y_; }
+    int getNum() { return num_; }
+
+   private:
+    int num_;
 };

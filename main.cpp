@@ -13,7 +13,9 @@
 #define WEEK_DAY_MINUTES 480
 #define WEEK_DAYS 5
 
-int default_courier_amount = 0, car_courier_amount = 0;
+extern int default_courier_amount, car_courier_amount;
+bool is_set_couriers = false, is_start = false, is_stop = false;
+extern std::vector<Branch*> branches;
 
 #ifdef DEBUG
 int TEST_DEFAULT_COURIER_AMOUNT = 1;
@@ -28,7 +30,6 @@ int main() {
 
     sf::Event event;
     Dispatcher dispatcher;
-    dispatcher.set_dispatcher(0, 0);
     sf::Time elapsedTime;
     sf::Clock clock;
     while (window.isOpen()) {
@@ -42,6 +43,24 @@ int main() {
         // }
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) window.close();
+            if (!is_set_couriers && !is_start) {
+                HandleInputs(event);
+            }
+            if (!is_start) {
+                if (HandleSetCouriers(event))
+                    is_set_couriers = true;
+                else if (branches.size() < 7)
+                    HandleClickBranch(event);
+                dispatcher.set_dispatcher();
+            }
+            // if (is_set_couriers && branches.size() >= 1) {
+            //     if (HandleStart(event)) is_start = true;
+            // }
+            // if (HandlePause(event)) is_stop = true;
+            // if (HandleStop(event)) {
+            //     // ...
+            // }
+            HandleIntervals(event);
             HandleEvent(event);
         }
         elapsedTime = clock.getElapsedTime();
@@ -51,6 +70,7 @@ int main() {
         }
         Interface(window);
         DrawBranches(window);
+        dispatcher.drawCouriers(window);
         window.display();
     }
 #endif
