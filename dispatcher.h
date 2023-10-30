@@ -34,6 +34,7 @@ class Dispatcher {
     Courier* get_courier(int);
     Request create_new_request(std::pair<int, int> deviation);
     void assign_new_request(Request);
+    void print_time(sf::RenderWindow& window);
 
     void drawCouriers(sf::RenderWindow& window);
 
@@ -179,4 +180,16 @@ bool Dispatcher::probability(int input_time) {
     }
     std::bernoulli_distribution dist(probability);
     return dist(generator);
+}
+
+void Dispatcher::print_time(sf::RenderWindow& window) {
+    int temp = (simulated_time_) % 540 + 540;
+    int hours = temp / 60;
+    int minutes = temp % 60;
+    std::string h_str = std::to_string(hours);
+    std::string m_str = std::to_string(minutes);
+    if (h_str.length() < 2) h_str = '0' + h_str;
+    if (m_str.length() < 2) m_str = '0' + m_str;
+    Text t(100, 760, 30, h_str + " : " + m_str);
+    t.draw(window);
 }

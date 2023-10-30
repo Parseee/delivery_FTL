@@ -13,7 +13,7 @@
 #include "interface.h"
 #include "request.h"
 
-#define WEEK_DAY_MINUTES 480
+#define WEEK_DAY_MINUTES 540
 #define WEEK_DAYS 5
 
 extern int default_courier_amount, car_courier_amount;
@@ -36,16 +36,17 @@ int main() {
     Dispatcher dispatcher;
     sf::Time elapsedTime;
     sf::Clock clock;
+    double slp = 800;
     while (window.isOpen()) {
         auto t = std::chrono::seconds(1000);
         if (is_start) {
-            while (dispatcher.get_simulated_time() / 480 < WEEK_DAYS) {
-                while (dispatcher.get_simulated_time() % 480 <
+            while (dispatcher.get_simulated_time() / WEEK_DAY_MINUTES < WEEK_DAYS) {
+                while (dispatcher.get_simulated_time() % WEEK_DAY_MINUTES <
                        WEEK_DAY_MINUTES) {
-                    sleep(1);
+                    sleep(slp / 1000.0);
                     window.clear(sf::Color::White);
                     if (dispatcher.probability(dispatcher.get_simulated_time() %
-                                               480))
+                                               WEEK_DAY_MINUTES))
                         dispatcher.assign_new_request(
                             dispatcher.create_new_request(deviation));
                     dispatcher.tick();
@@ -53,6 +54,7 @@ int main() {
                     Interface(window);
                     DrawBranches(window);
                     dispatcher.drawCouriers(window);
+                    dispatcher.print_time(window);
                     window.display();
                 }
             }
