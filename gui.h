@@ -74,7 +74,8 @@ class Field {
     virtual void draw(sf::RenderWindow &window);
     virtual void setText(std::string text, int size,
                          sf::Color color = sf::Color::Black) {
-        double x = x_ + (width_ - text.length() * size / 1.6180339887) / 2.0;
+        double x =
+            x_ + (width_ - text.length() * (int)(size / 1.6180339887)) / 2.0;
         double y = y_ + (height_ - size) / 2.0;
         text_.setData(x, y, size, text, color);
     }
@@ -85,8 +86,18 @@ class Field {
     }
     bool isClicked(sf::Event event);
     bool isActive() { return is_active_; }
-    virtual void clicked() { is_active_ = true; }
-    virtual void notClicked() { is_active_ = false; }
+    virtual void clicked() {
+        is_active_ = true;
+        if (!is_img_) {
+            color_ = sf::Color(169, 169, 169);
+        }
+    }
+    virtual void notClicked() {
+        is_active_ = false;
+        if (!is_img_) {
+            color_ = sf::Color(211, 211, 211);
+        }
+    }
 
    protected:
     double x_, y_;

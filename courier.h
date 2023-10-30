@@ -9,12 +9,11 @@
 
 class Courier {
    public:
-    Courier(int number, int location, int avg_time);
+    Courier(int number, int location);
     Courier(const Courier&) = delete;  // we don't need clones!
     Courier(Courier&& courier);
     virtual ~Courier() = default;
     virtual bool is_car() const = 0;
-    virtual int get_delivery_duration() const = 0;
     int get_location() const { return current_location_; }
     void add_consumed_time(int time_to_add);
 
@@ -22,10 +21,11 @@ class Courier {
     void add_new_request(Request request);
     Request give_away_current_request();
     void draw(sf::RenderWindow& window);
+    int get_delivery_duration();
+    bool is_request();
 
    protected:
     unsigned int number_;
-    unsigned int delivery_duration;
     std::priority_queue<Request> pending_request_;
     std::vector<Request> completed_requests_;
     unsigned int current_location_;

@@ -31,10 +31,13 @@ void Field::draw(sf::RenderWindow &window) {
         sprite.setPosition(x_, y_);
         window.draw(sprite);
     } else {
+        if (!this->is_active_) color_ = sf::Color(211, 211, 211);
         sf::RectangleShape field;
         field.move(x_, y_);
         field.setFillColor(color_);
         field.setSize(sf::Vector2f(width_, height_));
+        field.setOutlineThickness(2);
+        field.setOutlineColor(sf::Color::Black);
         window.draw(field);
     }
     text_.draw(window);

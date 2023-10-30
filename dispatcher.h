@@ -13,16 +13,12 @@
 #include "gui.h"
 #include "request.h"
 
-#define DEFAULT_TIME_MULTIPLIER 720
-
 #define REPLACE 1
 const int SECONDS = 1800;
 extern std::vector<std::pair<Branch*, Branch*>> branches_list;
 extern std::vector<Branch*> branches;
 extern std::vector<std::pair<int, int>> car_courier_list;
 extern std::vector<std::pair<int, int>> default_courier_list;
-
-#define DEPRECATED
 
 class Dispatcher {
    public:
@@ -31,46 +27,27 @@ class Dispatcher {
     Dispatcher(Dispatcher&&) = delete;
 
     void set_dispatcher();
-    void set_time_multiplier(int);
-    time_t get_current_time() const;
     int get_simulated_time() const;
-    int get_days() const;
     void tick();
-    void update_days();
+    bool probability(int input_time);
 
     Courier* get_courier(int);
-    Request create_new_request();
+    Request create_new_request(std::pair<int, int> deviation);
     void assign_new_request(Request);
 
     void drawCouriers(sf::RenderWindow& window);
-
-    // debug method
-#ifdef DEPRECATED
-    Courier* get_last_courier_and_kill() {
-        Courier* courier = couriers_.back();
-        couriers_.pop_back();
-        return courier;
-    }
-#endif
 
    private:
     std::vector<Courier*> couriers_;
     std::vector<std::vector<std::pair<int, int>>>
         branches_;  // must be filled with adjacency list
     // std::vector < Branch * >  branches_;
-    time_t time0;
-    int days_;
     int simulated_time_;
-    int time_multiplier_;
     std::mt19937 generator;
 };
 
 void Dispatcher::set_dispatcher() {
-    time_multiplier_ = DEFAULT_TIME_MULTIPLIER;
-
-    generator.seed(time(nullptr));
     simulated_time_ = 0;
-    days_ = 0;
     int courier_number = 0;
     for (int i = 0; i < couriers_.size(); ++i) {
         delete couriers_[i];
@@ -100,33 +77,22 @@ void Dispatcher::set_dispatcher() {
         branches_[a].push_back({b, len});
         branches_[b].push_back({a, len});
     }
-    time0 = time(nullptr);
-}
-
-void Dispatcher::set_time_multiplier(int mult) { time_multiplier_ = mult; }
-
-time_t Dispatcher::get_current_time() const {
-    return (time(nullptr)) * time_multiplier_;
 }
 
 int Dispatcher::get_simulated_time() const { return simulated_time_; }
-
-int Dispatcher::get_days() const { return days_; }
 
 void Dispatcher::tick() {
     simulated_time_ += 1;
 
     for (auto courier : couriers_) {
-        if (courier->get_curent_request().end_time <= get_simulated_time()) {
-            courier->give_away_current_request();
-            // anything else?
+        if (courier->is_request()) {
+            if (courier->get_curent_request().end_time <=
+                get_simulated_time()) {
+                courier->give_away_current_request();
+            }
         }
+        // animation
     }
-}
-
-void Dispatcher::update_days() {
-    simulated_time_ = 0;
-    ++days_;
 }
 
 Courier* Dispatcher::get_courier(int start_loc) {
@@ -139,15 +105,16 @@ Courier* Dispatcher::get_courier(int start_loc) {
         auto v = q.top().second;
         q.pop();
 
-        for (auto u : branches_[v]) {
+        // for (auto u : branches_[v]) {
+        for (int i = 1; i < branches_[v].size(); ++i) {
+            auto u = branches_[v][i];
             if (distance[u.first] > distance[v] + u.second) {
                 distance[u.first] = distance[v] + u.second;
-                q.push({-distance[u.first], u.second});
+                q.push({-distance[u.first], u.first});
             }
         }
     }
 
-#ifdef DEBUG
     std::cout << "\n-------------\n";
     std::cout << "Distances are: ";
     for (auto elem : distance) {
@@ -159,7 +126,6 @@ Courier* Dispatcher::get_courier(int start_loc) {
         std::cout << elem->get_location() << " ";
     }
     std::cout << "\n-------------\n";
-#endif
 
     int preferable_distance = INT_MAX;
     Courier* preferable_courier = nullptr;
@@ -173,11 +139,16 @@ Courier* Dispatcher::get_courier(int start_loc) {
     return preferable_courier;
 }
 
-// edit end_time
-Request Dispatcher::create_new_request() {
-    return Request(Dispatcher::get_current_time(),
-                   Dispatcher::get_current_time() + SECONDS, REPLACE, REPLACE,
-                   REPLACE);
+Request Dispatcher::create_new_request(std::pair<int, int> deviation) {
+    generator = std::move(std::mt19937(time(nullptr)));
+    return Request(Dispatcher::get_simulated_time(),
+                   Dispatcher::get_simulated_time() +
+                       (deviation.first +
+                        generator() % (deviation.second - deviation.first + 1)),
+                   generator() % branches_.size() + 1,
+                   generator() % branches_.size() + 1, generator() % 3);
+
+    // A + rand() % (B - A + 1);
 }
 
 void Dispatcher::assign_new_request(Request request) {
@@ -193,4 +164,19 @@ void Dispatcher::drawCouriers(sf::RenderWindow& window) {
     for (int i = 0; i < couriers_.size(); ++i) {
         couriers_[i]->draw(window);
     }
+}
+
+bool Dispatcher::probability(int input_time) {
+    generator = std::move(std::mt19937(time(nullptr)));
+    double probability;
+
+    if (input_time < 240) {
+        probability = 0.3;  // Morning (before 12:00 PM)
+    } else if (input_time < 360) {
+        probability = 0.7;  // Afternoon (from 12:00 to 14:00)
+    } else {
+        probability = 0.5;  // Evening (after 4:00 PM)
+    }
+    std::bernoulli_distribution dist(probability);
+    return dist(generator);
 }

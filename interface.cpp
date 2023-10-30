@@ -8,14 +8,9 @@
 #include "gui.h"
 
 /*
-возможно изменить шрифт на моношир
-сделать нормальную обработку событий
-расстановка курьеров
 рандомизация заявок
 прописать изменение локации курьеров
-возможно пофиксить фичу (не баг) с линиями
 кнопка ускорение и замедление
-разобраться с нумерацией
 */
 
 std::vector<Branch *> branches;
@@ -23,6 +18,7 @@ std::vector<std::pair<Branch *, Branch *>> branches_list;
 std::vector<std::pair<int, int>> car_courier_list;
 std::vector<std::pair<int, int>> default_courier_list;
 std::map<int, Branch *> branches_map;
+std::pair<int, int> deviation;
 
 double mouse_x, mouse_y;
 
@@ -33,12 +29,12 @@ Button input_foot_button(140, 140, 30, 30);
 InputField input_by_car(30, 55, 100, 30);
 InputField input_foot(30, 140, 100, 30);
 
-Button interval_minus_first(25, 295, 20, 20);
-InputField interval_field_first(60, 290, 50, 30);
-Button interval_plus_first(125, 295, 20, 20);
-Button interval_minus_second(25, 335, 20, 20);
-InputField interval_field_second(60, 330, 50, 30);
-Button interval_plus_second(125, 335, 20, 20);
+// Button interval_minus_first(25, 295, 20, 20);
+// InputField interval_field_first(60, 290, 50, 30);
+// Button interval_plus_first(125, 295, 20, 20);
+// Button interval_minus_second(25, 335, 20, 20);
+// InputField interval_field_second(60, 330, 50, 30);
+// Button interval_plus_second(125, 335, 20, 20);
 
 Button deviation_minus_first(25, 445, 20, 20);
 InputField deviation_field_first(60, 440, 50, 30);
@@ -49,9 +45,11 @@ Button deviation_plus_second(125, 485, 20, 20);
 
 Button set_couriers(30, 650, 230, 70);
 
-Button start_button(30, 810, 70, 70);
-Button pause_button(110, 810, 70, 70);
-Button stop_button(190, 810, 70, 70);
+Button slow_button(30, 810, 70, 70);
+Button start_button(110, 810, 70, 70);
+Button fast_button(190, 810, 70, 70);
+Button pause_button(270, 810, 70, 70);
+Button stop_button(350, 810, 70, 70);
 
 void Interface(sf::RenderWindow &window) {
     Text text_by_car(30, 20, 25, "Number of couriers by car");
@@ -71,20 +69,24 @@ void Interface(sf::RenderWindow &window) {
     pause_button.draw(window);
     stop_button.setImage("images/stop.png");
     stop_button.draw(window);
+    slow_button.setImage("images/slow.png");
+    slow_button.draw(window);
+    fast_button.setImage("images/fast.png");
+    fast_button.draw(window);
 
-    Text interval_text(30, 250, 25, "Interval:");
-    interval_text.draw(window);
-    interval_plus_first.setImage("images/plus.png");
-    interval_plus_first.draw(window);
-    interval_field_first.draw(window);
-    interval_minus_first.setImage("images/minus.png");
-    interval_minus_first.draw(window);
+    // Text interval_text(30, 250, 25, "Interval:");
+    // interval_text.draw(window);
+    // interval_plus_first.setImage("images/plus.png");
+    // interval_plus_first.draw(window);
+    // interval_field_first.draw(window);
+    // interval_minus_first.setImage("images/minus.png");
+    // interval_minus_first.draw(window);
 
-    interval_plus_second.setImage("images/plus.png");
-    interval_plus_second.draw(window);
-    interval_field_second.draw(window);
-    interval_minus_second.setImage("images/minus.png");
-    interval_minus_second.draw(window);
+    // interval_plus_second.setImage("images/plus.png");
+    // interval_plus_second.draw(window);
+    // interval_field_second.draw(window);
+    // interval_minus_second.setImage("images/minus.png");
+    // interval_minus_second.draw(window);
 
     Text deviation_text(30, 400, 25, "Delivery time deviation:");
     deviation_text.draw(window);
@@ -101,7 +103,6 @@ void Interface(sf::RenderWindow &window) {
     deviation_minus_second.draw(window);
 
     set_couriers.setText("Set couriers", 25);
-    set_couriers.setColor(sf::Color(169, 169, 169));
     set_couriers.draw(window);
 
     Text current_time_text(30, 760, 30, "TIME ");
@@ -116,10 +117,10 @@ void HandleEvent(sf::Event event) {
 }
 
 void HandleIntervals(sf::Event event) {
-    if (interval_field_first.getText().length() == 0)
-        interval_field_first.updateText("2");
-    if (interval_field_second.getText().length() == 0)
-        interval_field_second.updateText("20");
+    // if (interval_field_first.getText().length() == 0)
+    //     interval_field_first.updateText("2");
+    // if (interval_field_second.getText().length() == 0)
+    //     interval_field_second.updateText("20");
     if (deviation_field_first.getText().length() == 0)
         deviation_field_first.updateText("-5");
     if (deviation_field_second.getText().length() == 0)
@@ -127,32 +128,34 @@ void HandleIntervals(sf::Event event) {
 
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Left) {
-            if (interval_minus_first.isClicked(event)) {
-                std::string str = interval_field_first.getText();
-                int num = std::stoi(str);
-                num = std::max(2, num - 1);
-                interval_field_first.updateText(std::to_string(num));
-            }
-            if (interval_plus_first.isClicked(event)) {
-                std::string str = interval_field_first.getText();
-                int num = std::stoi(str);
-                num = std::min(std::stoi(interval_field_second.getText()) - 1,
-                               num + 1);
-                interval_field_first.updateText(std::to_string(num));
-            }
-            if (interval_minus_second.isClicked(event)) {
-                std::string str = interval_field_second.getText();
-                int num = std::stoi(str);
-                num = std::max(num - 1,
-                               std::stoi(interval_field_first.getText()) + 1);
-                interval_field_second.updateText(std::to_string(num));
-            }
-            if (interval_plus_second.isClicked(event)) {
-                std::string str = interval_field_second.getText();
-                int num = std::stoi(str);
-                ++num;
-                interval_field_second.updateText(std::to_string(num));
-            }
+            // if (interval_minus_first.isClicked(event)) {
+            //     std::string str = interval_field_first.getText();
+            //     int num = std::stoi(str);
+            //     num = std::max(2, num - 1);
+            //     interval_field_first.updateText(std::to_string(num));
+            // }
+            // if (interval_plus_first.isClicked(event)) {
+            //     std::string str = interval_field_first.getText();
+            //     int num = std::stoi(str);
+            //     num = std::min(std::stoi(interval_field_second.getText()) -
+            //     1,
+            //                    num + 1);
+            //     interval_field_first.updateText(std::to_string(num));
+            // }
+            // if (interval_minus_second.isClicked(event)) {
+            //     std::string str = interval_field_second.getText();
+            //     int num = std::stoi(str);
+            //     num = std::max(num - 1,
+            //                    std::stoi(interval_field_first.getText()) +
+            //                    1);
+            //     interval_field_second.updateText(std::to_string(num));
+            // }
+            // if (interval_plus_second.isClicked(event)) {
+            //     std::string str = interval_field_second.getText();
+            //     int num = std::stoi(str);
+            //     ++num;
+            //     interval_field_second.updateText(std::to_string(num));
+            // }
 
             if (deviation_minus_first.isClicked(event)) {
                 std::string str = deviation_field_first.getText();
@@ -180,6 +183,8 @@ void HandleIntervals(sf::Event event) {
                 ++num;
                 deviation_field_second.updateText(std::to_string(num));
             }
+            deviation.first = std::stoi(deviation_field_first.getText());
+            deviation.second = std::stoi(deviation_field_second.getText());
         }
     }
 }
@@ -242,24 +247,22 @@ void HandleClickBranch(sf::Event event) {
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Left) {
             if (event.mouseButton.x >= 350) {
-                bool is_branch = false;
+                Branch *prev = nullptr;
+                Branch *cur = nullptr;
                 for (int i = 0; i < branches.size(); ++i) {
-                    if (branches[i]->isClicked(event)) {
-                        is_branch = true;
+                    if (branches[i]->isClicked(event) && cur == nullptr) {
+                        cur = branches[i];
                         branches[i]->clicked();
-                        break;
-                    }
+                    } else if (branches[i]->isActive() && prev == nullptr)
+                        prev = branches[i];
                 }
-                if (!is_branch) {
-                    Branch *prev = nullptr;
-                    for (int i = 0; i < branches.size(); ++i) {
-                        if (branches[i]->isActive() && prev == nullptr)
-                            prev = branches[i];
-                        branches[i]->notClicked();
-                    }
-                    // feature
+                if (cur == nullptr && branches.size() < 7) {
                     CreateBranch(event.mouseButton.x, event.mouseButton.y,
                                  prev);
+                    BranchesNotActive();
+                } else if (cur != nullptr && prev != nullptr) {
+                    CreateExistBranch(prev, cur);
+                    BranchesNotActive();
                 }
             }
         }
@@ -270,10 +273,14 @@ void CreateBranch(double x, double y, Branch *&prev) {
     Branch *new_branch =
         new Branch(x - 75 / 2.0, y - 45 / 2.0, (int)branches.size() + 1);
     branches.push_back(new_branch);
-    branches_map[branches.size() - 1] = new_branch;
+    branches_map[branches.size()] = new_branch;
     if (prev != nullptr) {
         branches_list.push_back({new_branch, prev});
     }
+}
+
+void CreateExistBranch(Branch *&prev, Branch *&cur) {
+    branches_list.push_back({cur, prev});
 }
 
 void DrawBranches(sf::RenderWindow &window) {
@@ -298,22 +305,27 @@ void CheckLines(sf::RenderWindow &window) {
     }
 }
 
-bool HandleSetCouriers(sf::Event event) {
+bool HandleSetCouriers(sf::Event event, bool &is_set) {
     if (set_couriers.isClicked(event)) {
-        set_couriers.clicked();
-        return true;
+        if (set_couriers.isActive())
+            set_couriers.notClicked();
+        else if (default_courier_amount != 0 && car_courier_amount != 0) {
+            set_couriers.clicked();
+            return true;
+        }
     }
     if (set_couriers.isActive()) {
         for (int i = 0; i < branches.size(); ++i) {
             if (branches[i]->isClicked(event)) {
                 if (default_courier_list.size() < default_courier_amount) {
                     default_courier_list.push_back(
-                        {default_courier_list.size() + car_courier_list.size(),
+                        {default_courier_list.size() + car_courier_list.size() +
+                             1,
                          branches[i]->getNum()});
                 } else if (car_courier_list.size() < car_courier_amount) {
-                    car_courier_list.push_back(
-                        {default_courier_list.size() + car_courier_list.size(),
-                         branches[i]->getNum()});
+                    car_courier_list.push_back({default_courier_list.size() +
+                                                    car_courier_list.size() + 1,
+                                                branches[i]->getNum()});
                 }
                 return true;
             }
@@ -322,6 +334,18 @@ bool HandleSetCouriers(sf::Event event) {
     if (car_courier_list.size() == car_courier_amount &&
         default_courier_list.size() == default_courier_amount) {
         set_couriers.notClicked();
+        is_set = true;
     }
+    return false;
+}
+
+void BranchesNotActive() {
+    for (int i = 0; i < branches.size(); ++i) {
+        branches[i]->notClicked();
+    }
+}
+
+bool HandleStart(sf::Event event){
+    if (start_button.isClicked(event)) return true;
     return false;
 }
