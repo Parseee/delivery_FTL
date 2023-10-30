@@ -13,6 +13,9 @@
 статистика
 отлов ошибок
 дебаг
+кнопки пауза и стоп, замораживание заявки
+пофиксить выбор курьера
+кидает ошибку в add wasted time
 */
 
 std::vector<Branch *> branches;
@@ -25,7 +28,7 @@ std::pair<int, int> deviation;
 double mouse_x, mouse_y;
 
 int default_courier_amount = 0, car_courier_amount = 0;
-double slp = 1000;
+double slp = 800;
 
 Button input_by_car_button(140, 55, 30, 30);
 Button input_foot_button(140, 140, 30, 30);
@@ -354,10 +357,15 @@ bool HandleStart(sf::Event event) {
 }
 
 void HandleSlow(sf::Event event) {
-    if (slow_button.isClicked(event)) slp += 50;
+    if (slow_button.isClicked(event)) slp += 10;
 }
 
 void HandleFast(sf::Event event) {
-    if (fast_button.isClicked(event)) slp -= 50;
+    if (fast_button.isClicked(event)) slp -= 10;
     if (slp < 0) slp = 0;
+}
+
+bool HandlePause(sf::Event event) {
+    if (pause_button.isClicked(event)) return true;
+    return false;
 }

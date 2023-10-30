@@ -17,7 +17,8 @@
 #define WEEK_DAYS 5
 
 extern int default_courier_amount, car_courier_amount;
-bool is_set_couriers = false, is_start = false, is_stop = false, is_set = false;
+bool is_set_couriers = false, is_start = false, is_pause = false,
+     is_set = false;
 extern std::vector<Branch*> branches;
 extern std::pair<int, int> deviation;
 extern double slp;
@@ -35,9 +36,9 @@ int main() {
 
     sf::Event event;
     Dispatcher dispatcher;
-    sf::Time elapsedTime;
-    sf::Clock clock;
-    double slp = 800;
+    sf::Time elapsedTime, request_time;
+    sf::Clock clock, request_clock;
+    Request* current_request = nullptr;
     while (window.isOpen()) {
         auto t = std::chrono::seconds(1000);
         if (is_start) {
@@ -45,20 +46,38 @@ int main() {
                    WEEK_DAYS) {
                 while (dispatcher.get_simulated_time() % WEEK_DAY_MINUTES <
                        WEEK_DAY_MINUTES) {
-                    sleep(slp / 1000.0);
                     window.clear(sf::Color::White);
-                    if (dispatcher.probability(dispatcher.get_simulated_time() %
-                                               WEEK_DAY_MINUTES))
-                        dispatcher.assign_new_request(
-                            dispatcher.create_new_request(deviation));
-                    dispatcher.tick();
+                    if (!is_pause) {
+                        sleep(slp / 1000.0);
+                        if (dispatcher.probability(
+                                dispatcher.get_simulated_time() %
+                                WEEK_DAY_MINUTES)) {
+                            Request temp_request =
+                                dispatcher.create_new_request(deviation);
+                            current_request = &temp_request;
+                            dispatcher.assign_new_request(temp_request);
+                        }
+                        dispatcher.tick();
+                    }
                     while (window.pollEvent(event)) {
                         if (event.type == sf::Event::Closed) window.close();
                         HandleFast(event);
                         HandleSlow(event);
                         HandleIntervals(event);
+                        if (HandlePause(event)) is_pause = true;
+                        if (HandleStart(event)) is_pause = false;
+                        // if (HandleStop(event)) {
+                        //     // ...
+                        // }
                     }
-
+                    request_time = request_clock.getElapsedTime();
+                    if (request_time < sf::seconds(2) &&
+                        current_request != nullptr) {
+                        current_request->draw(window);
+                    } else if (!is_pause) {
+                        current_request = nullptr;
+                        request_time = request_clock.restart();
+                    }
                     Interface(window);
                     DrawBranches(window);
                     dispatcher.drawCouriers(window);
@@ -81,10 +100,6 @@ int main() {
                 if (is_set && branches.size()) {
                     if (HandleStart(event)) is_start = true;
                 }
-                // if (HandlePause(event)) is_stop = true;
-                // if (HandleStop(event)) {
-                //     // ...
-                // }
                 HandleIntervals(event);
                 HandleEvent(event);
             }
