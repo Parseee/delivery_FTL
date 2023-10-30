@@ -20,9 +20,10 @@ extern int default_courier_amount, car_courier_amount;
 bool is_set_couriers = false, is_start = false, is_stop = false, is_set = false;
 extern std::vector<Branch*> branches;
 extern std::pair<int, int> deviation;
+double slp = 1000;
 
 #ifdef DEBUG
-int TEST_DEFAULT_COURIER_AMOUNT = 1;
+    int TEST_DEFAULT_COURIER_AMOUNT = 1;
 int TEST_CAR_COURIER_AMOUNT = 1;
 #endif
 
@@ -40,7 +41,8 @@ int main() {
     while (window.isOpen()) {
         auto t = std::chrono::seconds(1000);
         if (is_start) {
-            while (dispatcher.get_simulated_time() / WEEK_DAY_MINUTES < WEEK_DAYS) {
+            while (dispatcher.get_simulated_time() / WEEK_DAY_MINUTES <
+                   WEEK_DAYS) {
                 while (dispatcher.get_simulated_time() % WEEK_DAY_MINUTES <
                        WEEK_DAY_MINUTES) {
                     sleep(slp / 1000.0);

@@ -68,3 +68,7 @@ bool Courier::is_request() {
     if (!pending_request_.empty()) return true;
     return false;
 }
+
+void Courier::add_wasted_time(int time_to_add){
+    wasted_time_ += time_to_add;
+}

@@ -137,6 +137,7 @@ Courier* Dispatcher::get_courier(int start_loc) {
             preferable_courier = courier;
         }
     }
+    preferable_courier->add_wasted_time(preferable_distance);
     return preferable_courier;
 }
 

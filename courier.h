@@ -1,11 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <map>
 #include <queue>
 #include <vector>
-#include <map>
 
-#include "request.h"
 #include "gui.h"
+#include "request.h"
 
 class Courier {
    public:
@@ -23,6 +23,8 @@ class Courier {
     void draw(sf::RenderWindow& window);
     int get_delivery_duration();
     bool is_request();
+    void add_wasted_time(int time_to_add);
+    int get_wasted_time() { return wasted_time_; }
 
    protected:
     unsigned int number_;
@@ -30,4 +32,5 @@ class Courier {
     std::vector<Request> completed_requests_;
     unsigned int current_location_;
     unsigned int consumed_time_;
+    int wasted_time_;
 };
