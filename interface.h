@@ -16,5 +16,7 @@ bool HandleSetCouriers(sf::Event event, bool &is_set);
 bool HandleStart(sf::Event event);
 bool HandlePause(sf::Event event);
 bool HandleStop(sf::Event event);
+void HandleFast(sf::Event event);
+void HandleSlow(sf::Event event);
 void HandleIntervals(sf::Event event);
 void HandleClickBranch(sf::Event event);

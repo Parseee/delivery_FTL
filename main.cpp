@@ -20,10 +20,10 @@ extern int default_courier_amount, car_courier_amount;
 bool is_set_couriers = false, is_start = false, is_stop = false, is_set = false;
 extern std::vector<Branch*> branches;
 extern std::pair<int, int> deviation;
-double slp = 1000;
+extern double slp;
 
 #ifdef DEBUG
-    int TEST_DEFAULT_COURIER_AMOUNT = 1;
+int TEST_DEFAULT_COURIER_AMOUNT = 1;
 int TEST_CAR_COURIER_AMOUNT = 1;
 #endif
 
@@ -52,6 +52,12 @@ int main() {
                         dispatcher.assign_new_request(
                             dispatcher.create_new_request(deviation));
                     dispatcher.tick();
+                    while (window.pollEvent(event)) {
+                        if (event.type == sf::Event::Closed) window.close();
+                        HandleFast(event);
+                        HandleSlow(event);
+                        HandleIntervals(event);
+                    }
 
                     Interface(window);
                     DrawBranches(window);

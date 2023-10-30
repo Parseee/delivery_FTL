@@ -37,6 +37,7 @@ class Dispatcher {
     void print_time(sf::RenderWindow& window);
 
     void drawCouriers(sf::RenderWindow& window);
+    std::vector<Courier*> get_couriers() { return couriers_; }
 
    private:
     std::vector<Courier*> couriers_;
