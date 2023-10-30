@@ -64,10 +64,10 @@ void Dispatcher::set_dispatcher() {
     }
 
     branches_.clear();
-    branches_.resize(branches.size() + 1);
+    branches_.resize(branches.size());
     for (int i = 0; i < branches_list.size(); ++i) {
-        int a = branches_list[i].first->getNum();
-        int b = branches_list[i].second->getNum();
+        int a = branches_list[i].first->getNum() - 1;
+        int b = branches_list[i].second->getNum() - 1;
         double x1 = branches_list[i].first->getX(),
                y1 = branches_list[i].first->getY(),
                x2 = branches_list[i].second->getX(),
@@ -105,9 +105,9 @@ Courier* Dispatcher::get_courier(int start_loc) {
         auto v = q.top().second;
         q.pop();
 
-        // for (auto u : branches_[v]) {
-        for (int i = 1; i < branches_[v].size(); ++i) {
-            auto u = branches_[v][i];
+        for (auto u : branches_[v]) {
+            // for (int i = 1; i < branches_[v].size(); ++i) {
+            //     auto u = branches_[v][i];
             if (distance[u.first] > distance[v] + u.second) {
                 distance[u.first] = distance[v] + u.second;
                 q.push({-distance[u.first], u.first});
@@ -145,8 +145,8 @@ Request Dispatcher::create_new_request(std::pair<int, int> deviation) {
                    Dispatcher::get_simulated_time() +
                        (deviation.first +
                         generator() % (deviation.second - deviation.first + 1)),
-                   generator() % branches_.size() + 1,
-                   generator() % branches_.size() + 1, generator() % 3);
+                   generator() % branches_.size(),
+                   generator() % branches_.size(), generator() % 3);
 
     // A + rand() % (B - A + 1);
 }

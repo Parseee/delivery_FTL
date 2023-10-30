@@ -273,7 +273,7 @@ void CreateBranch(double x, double y, Branch *&prev) {
     Branch *new_branch =
         new Branch(x - 75 / 2.0, y - 45 / 2.0, (int)branches.size() + 1);
     branches.push_back(new_branch);
-    branches_map[branches.size()] = new_branch;
+    branches_map[branches.size() - 1] = new_branch;
     if (prev != nullptr) {
         branches_list.push_back({new_branch, prev});
     }
@@ -321,11 +321,11 @@ bool HandleSetCouriers(sf::Event event, bool &is_set) {
                     default_courier_list.push_back(
                         {default_courier_list.size() + car_courier_list.size() +
                              1,
-                         branches[i]->getNum()});
+                         branches[i]->getNum() - 1});
                 } else if (car_courier_list.size() < car_courier_amount) {
                     car_courier_list.push_back({default_courier_list.size() +
                                                     car_courier_list.size() + 1,
-                                                branches[i]->getNum()});
+                                                branches[i]->getNum() - 1});
                 }
                 return true;
             }
@@ -345,7 +345,7 @@ void BranchesNotActive() {
     }
 }
 
-bool HandleStart(sf::Event event){
+bool HandleStart(sf::Event event) {
     if (start_button.isClicked(event)) return true;
     return false;
 }
