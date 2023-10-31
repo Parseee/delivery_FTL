@@ -17,7 +17,7 @@ class Courier {
     int get_location() const { return current_location_; }
     void add_consumed_time(int time_to_add);
 
-    Request get_curent_request();
+    Request get_current_request();
     void add_new_request(Request request);
     Request give_away_current_request();
     void draw(sf::RenderWindow& window);
@@ -25,6 +25,11 @@ class Courier {
     bool is_request();
     void add_wasted_time(int time_to_add);
     int get_wasted_time() { return wasted_time_; }
+    int get_consumed_time() { return consumed_time_; }
+    int get_courier_number() { return number_; }
+    int get_amount_of_processed_requests() {
+        return completed_requests_.size();
+    }
 
    protected:
     unsigned int number_;

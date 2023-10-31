@@ -88,7 +88,7 @@ void Dispatcher::tick() {
 
     for (auto courier : couriers_) {
         if (courier->is_request()) {
-            if (courier->get_curent_request().end_time <=
+            if (courier->get_current_request().end_time <=
                 get_simulated_time()) {
                 courier->give_away_current_request();
             }

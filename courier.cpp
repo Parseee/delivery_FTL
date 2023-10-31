@@ -24,7 +24,7 @@ Courier::Courier(Courier&& courier)
     courier.consumed_time_ = 0;
 }
 
-Request Courier::get_curent_request() {
+Request Courier::get_current_request() {
     if (pending_request_.empty()) {
         throw std::logic_error("There are no requests!");
     } else
@@ -40,7 +40,7 @@ void Courier::add_new_request(Request request) {
 }
 
 Request Courier::give_away_current_request() {
-    Request request = get_curent_request();
+    Request request = get_current_request();
     pending_request_.pop();
     completed_requests_.push_back(request);
     current_location_ = request.destination;
@@ -61,7 +61,7 @@ void Courier::draw(sf::RenderWindow& window) {
 }
 
 int Courier::get_delivery_duration() {
-    return get_curent_request().end_time - get_curent_request().start_time;
+    return get_current_request().end_time - get_current_request().start_time;
 }
 
 bool Courier::is_request() {

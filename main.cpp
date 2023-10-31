@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "car_courier.h"
+#include "database.h"
 #include "default_courier.h"
 #include "dispatcher.h"
 #include "gui.h"
@@ -71,13 +72,14 @@ int main() {
                         // }
                     }
                     request_time = request_clock.getElapsedTime();
-                    if (request_time < sf::seconds(2) &&
-                        current_request != nullptr) {
-                        current_request->draw(window);
-                    } else if (!is_pause) {
-                        current_request = nullptr;
-                        request_time = request_clock.restart();
+                    if (request_time >= sf::seconds(2)) {
+                        if (!is_pause) {
+                            current_request = nullptr;
+                            request_time = request_clock.restart();
+                        }
                     }
+                    if (current_request != nullptr)
+                        current_request->draw(window);
                     Interface(window);
                     DrawBranches(window);
                     dispatcher.drawCouriers(window);
