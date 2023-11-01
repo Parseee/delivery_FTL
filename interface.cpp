@@ -7,19 +7,6 @@
 #include "courier.h"
 #include "gui.h"
 
-/*
-анимация
-статистика
-отлов ошибок
-дебаг
-кнопки пауза и стоп, замораживание заявки
-пофиксить выбор курьера
-кидает ошибку в add wasted time, если не связный
-0 число курьеров
-курьеры на машине
-слишком большой поток заявок
-*/
-
 std::vector<Branch *> branches;
 std::vector<std::pair<Branch *, Branch *>> branches_list;
 std::vector<std::pair<int, int>> car_courier_list;
@@ -30,7 +17,7 @@ std::pair<int, int> deviation;
 double mouse_x, mouse_y;
 
 int default_courier_amount = 0, car_courier_amount = 0;
-double slp = 800;
+double slp = 900;
 
 Button input_by_car_button(140, 55, 30, 30);
 Button input_foot_button(140, 140, 30, 30);
@@ -130,9 +117,9 @@ void HandleIntervals(sf::Event event) {
     // if (interval_field_second.getText().length() == 0)
     //     interval_field_second.updateText("20");
     if (deviation_field_first.getText().length() == 0)
-        deviation_field_first.updateText("-5");
+        deviation_field_first.updateText("0");
     if (deviation_field_second.getText().length() == 0)
-        deviation_field_second.updateText("30");
+        deviation_field_second.updateText("1");
 
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Left) {
@@ -317,7 +304,7 @@ bool HandleSetCouriers(sf::Event event, bool &is_set) {
     if (set_couriers.isClicked(event)) {
         if (set_couriers.isActive())
             set_couriers.notClicked();
-        else if (default_courier_amount != 0 && car_courier_amount != 0) {
+        else if (default_courier_amount != 0 || car_courier_amount != 0) {
             set_couriers.clicked();
             return true;
         }
@@ -359,15 +346,30 @@ bool HandleStart(sf::Event event) {
 }
 
 void HandleSlow(sf::Event event) {
-    if (slow_button.isClicked(event)) slp += 50;
+    if (slow_button.isClicked(event)) slp += 100;
 }
 
 void HandleFast(sf::Event event) {
-    if (fast_button.isClicked(event)) slp -= 50;
+    if (fast_button.isClicked(event)) slp -= 100;
     if (slp < 0) slp = 0;
 }
 
 bool HandlePause(sf::Event event) {
     if (pause_button.isClicked(event)) return true;
     return false;
+}
+
+bool HandleStop(sf::Event event) {
+    if (stop_button.isClicked(event)) return true;
+    return false;
+}
+
+void InterfaceClear(){
+    default_courier_amount = 0;
+    car_courier_amount = 0;
+    branches.clear();
+    branches_list.clear();
+    branches_map.clear();
+    car_courier_list.clear();
+    default_courier_list.clear();
 }

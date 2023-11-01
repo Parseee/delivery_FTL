@@ -5,7 +5,7 @@
 void Text::draw(sf::RenderWindow &window) {
     if (text_.length() != 0) {
         sf::Font font;
-        if (font.loadFromFile("Anonymous_Pro_B.ttf")) {
+        if (font.loadFromFile("Gilroy-Semibold.ttf")) {
             sf::Text text;
             text.setFont(font);
             text.setString(text_);

@@ -21,7 +21,7 @@ struct Request {
           urgency(urgency) {}
 
     bool operator<(const Request req) const {
-        return this->urgency > req.urgency;
+        return this->urgency < req.urgency;
     }
     void draw(sf::RenderWindow &window) {
         Field req(1370, 670, 200, 200);

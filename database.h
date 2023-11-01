@@ -14,7 +14,7 @@ class Database {
         for (auto courier : dispatcher.get_couriers()) {
             output_stream << "Courier " << courier->get_courier_number() << " :\n";
             output_stream << "Request processed: " << courier->get_amount_of_processed_requests() << '\n';
-            output_stream << "Time spent: " << courier->get_consumed_time() << " , idle: " << courier->get_wasted_time() << '\n';
+            output_stream << "Time spent: " << courier->get_consumed_time() << ", idle: " << courier->get_wasted_time() << '\n';
             output_stream << '\n';
         }
     }

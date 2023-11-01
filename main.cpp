@@ -23,6 +23,7 @@ bool is_set_couriers = false, is_start = false, is_pause = false,
 extern std::vector<Branch*> branches;
 extern std::pair<int, int> deviation;
 extern double slp;
+Request temp_request;
 
 #ifdef DEBUG
 int TEST_DEFAULT_COURIER_AMOUNT = 1;
@@ -36,29 +37,35 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1600, 900), "Delivery");
 
     sf::Event event;
-    Dispatcher dispatcher;
+    Dispatcher* dispatcher = new Dispatcher;
     sf::Time elapsedTime, request_time;
     sf::Clock clock, request_clock;
     Request* current_request = nullptr;
+    int requests_cnt = 0;
     while (window.isOpen()) {
         if (is_start) {
-            while (dispatcher.get_simulated_time() / WEEK_DAY_MINUTES <
-                   WEEK_DAYS) {
-                while (dispatcher.get_simulated_time() % WEEK_DAY_MINUTES <
-                       WEEK_DAY_MINUTES) {
+            while (is_start &&
+                   dispatcher->get_simulated_time() / WEEK_DAY_MINUTES <
+                       WEEK_DAYS) {
+                while (is_start &&
+                       dispatcher->get_simulated_time() % WEEK_DAY_MINUTES + 1 <
+                           WEEK_DAY_MINUTES) {
                     window.clear(sf::Color::White);
                     if (!is_pause) {
-                        sleep(slp / 1000.0);
-                        if (dispatcher.probability(
-                                dispatcher.get_simulated_time() %
+                        usleep(slp * 1000);
+                        if (dispatcher->probability(
+                                dispatcher->get_simulated_time() %
                                 WEEK_DAY_MINUTES)) {
-                            Request temp_request =
-                                dispatcher.create_new_request(deviation);
+                            temp_request =
+                                dispatcher->create_new_request(deviation);
                             current_request = &temp_request;
-                            dispatcher.add_request(temp_request);
+                            dispatcher->add_request(temp_request);
+                            ++requests_cnt;
                         }
-                        dispatcher.assign_new_request();
-                        dispatcher.tick();
+                        bool assign = true;
+                        while (assign)
+                            assign = dispatcher->assign_new_request();
+                        dispatcher->tick();
                     }
                     while (window.pollEvent(event)) {
                         if (event.type == sf::Event::Closed) window.close();
@@ -67,9 +74,18 @@ int main() {
                         HandleIntervals(event);
                         if (HandlePause(event)) is_pause = true;
                         if (HandleStart(event)) is_pause = false;
-                        // if (HandleStop(event)) {
-                        //     // ...
-                        // }
+                        if (HandleStop(event)) {
+                            Database database;
+                            database.put_data_to_file(*dispatcher);
+                            is_start = false;
+                            is_set = false;
+                            is_set_couriers = false;
+                            dispatcher->clear();
+                            delete dispatcher;
+                            dispatcher = new Dispatcher;
+                            InterfaceClear();
+                        }
+                        dispatcher->HandleCouriers(event);
                     }
                     request_time = request_clock.getElapsedTime();
                     if (request_time >= sf::seconds(2)) {
@@ -78,27 +94,40 @@ int main() {
                             request_time = request_clock.restart();
                         }
                     }
+
                     if (current_request != nullptr)
                         current_request->draw(window);
                     Interface(window);
                     DrawBranches(window);
-                    dispatcher.drawCouriers(window,
-                                            dispatcher.get_simulated_time());
-                    dispatcher.print_time(window);
+                    dispatcher->drawCouriers(window,
+                                             dispatcher->get_simulated_time());
+                    dispatcher->print_time(window);
+                    std::cout << dispatcher->get_requests_cnt() << '\n';
                     window.display();
                 }
+                dispatcher->tick();
             }
         } else {
             window.clear(sf::Color::White);
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) window.close();
+                if (HandleStop(event)) {
+                    is_start = false;
+                    is_set = false;
+                    is_set_couriers = false;
+                    dispatcher->clear();
+                    delete dispatcher;
+                    dispatcher = new Dispatcher;
+                    InterfaceClear();
+                    break;
+                }
                 if (!is_set_couriers && !is_start) {
                     HandleInputs(event);
                 }
                 if (!is_start) {
                     is_set_couriers = HandleSetCouriers(event, is_set);
                     if (!is_set_couriers) HandleClickBranch(event);
-                    dispatcher.set_dispatcher();
+                    dispatcher->set_dispatcher();
                 }
                 if (is_set && branches.size()) {
                     if (HandleStart(event)) is_start = true;
@@ -113,7 +142,7 @@ int main() {
             }
             Interface(window);
             DrawBranches(window);
-            dispatcher.drawCouriers(window, dispatcher.get_simulated_time());
+            dispatcher->drawCouriers(window, dispatcher->get_simulated_time());
             window.display();
         }
     }

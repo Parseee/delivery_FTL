@@ -32,6 +32,13 @@ class Courier {
     int get_amount_of_processed_requests() {
         return completed_requests_.size();
     }
+    bool is_active() { return is_active_; }
+    bool is_clicked(sf::Event event);
+    void clicked() { is_active_ = true; }
+    void not_clicked() { is_active_ = false; }
+    sf::Time courier_time;
+    sf::Clock courier_clock;
+    void draw_info(sf::RenderWindow &window);
 
    protected:
     unsigned int number_;
@@ -43,4 +50,5 @@ class Courier {
     unsigned int consumed_time_;
     int wasted_time_;
     double x_, y_;
+    bool is_active_ = false;
 };

@@ -1,0 +1,16 @@
+Courier 1 :
+Request processed: 4
+Time spent: 417, idle: 406
+
+Courier 2 :
+Request processed: 3
+Time spent: 458, idle: 460
+
+Courier 3 :
+Request processed: 4
+Time spent: 507, idle: 499
+
+Courier 4 :
+Request processed: 5
+Time spent: 435, idle: 432
+

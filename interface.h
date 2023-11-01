@@ -20,3 +20,4 @@ void HandleFast(sf::Event event);
 void HandleSlow(sf::Event event);
 void HandleIntervals(sf::Event event);
 void HandleClickBranch(sf::Event event);
+void InterfaceClear();
