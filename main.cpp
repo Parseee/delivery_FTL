@@ -41,7 +41,6 @@ int main() {
     sf::Clock clock, request_clock;
     Request* current_request = nullptr;
     while (window.isOpen()) {
-        auto t = std::chrono::seconds(1000);
         if (is_start) {
             while (dispatcher.get_simulated_time() / WEEK_DAY_MINUTES <
                    WEEK_DAYS) {
@@ -56,8 +55,9 @@ int main() {
                             Request temp_request =
                                 dispatcher.create_new_request(deviation);
                             current_request = &temp_request;
-                            dispatcher.assign_new_request(temp_request);
+                            dispatcher.add_request(temp_request);
                         }
+                        dispatcher.assign_new_request();
                         dispatcher.tick();
                     }
                     while (window.pollEvent(event)) {
@@ -82,7 +82,8 @@ int main() {
                         current_request->draw(window);
                     Interface(window);
                     DrawBranches(window);
-                    dispatcher.drawCouriers(window);
+                    dispatcher.drawCouriers(window,
+                                            dispatcher.get_simulated_time());
                     dispatcher.print_time(window);
                     window.display();
                 }
@@ -112,7 +113,7 @@ int main() {
             }
             Interface(window);
             DrawBranches(window);
-            dispatcher.drawCouriers(window);
+            dispatcher.drawCouriers(window, dispatcher.get_simulated_time());
             window.display();
         }
     }

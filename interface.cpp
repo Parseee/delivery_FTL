@@ -14,8 +14,10 @@
 дебаг
 кнопки пауза и стоп, замораживание заявки
 пофиксить выбор курьера
-кидает ошибку в add wasted time
-как-то сделать так, что даже если курьер в пути, могла прийти заявка
+кидает ошибку в add wasted time, если не связный
+0 число курьеров
+курьеры на машине
+слишком большой поток заявок
 */
 
 std::vector<Branch *> branches;
@@ -357,11 +359,11 @@ bool HandleStart(sf::Event event) {
 }
 
 void HandleSlow(sf::Event event) {
-    if (slow_button.isClicked(event)) slp += 10;
+    if (slow_button.isClicked(event)) slp += 50;
 }
 
 void HandleFast(sf::Event event) {
-    if (fast_button.isClicked(event)) slp -= 10;
+    if (fast_button.isClicked(event)) slp -= 50;
     if (slp < 0) slp = 0;
 }
 

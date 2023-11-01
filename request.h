@@ -10,7 +10,7 @@ struct Request {
     unsigned int source;
     unsigned int destination;
     unsigned int urgency;
-    
+
     Request() = default;
     Request(time_t start_time, time_t end_time, unsigned int source,
             unsigned int destination, unsigned int urgency)
@@ -18,8 +18,7 @@ struct Request {
           end_time(end_time),
           source(source),
           destination(destination),
-          urgency(urgency) {
-    }
+          urgency(urgency) {}
 
     bool operator<(const Request req) const {
         return this->urgency > req.urgency;
@@ -28,9 +27,9 @@ struct Request {
         Field req(1370, 670, 200, 200);
         req.setColor(sf::Color(211, 211, 211));
         Text req_text(1380, 680, 25, "NEW REQUEST", sf::Color::Red);
-        Text source_text(1380, 715, 25, "from: " + std::to_string(source));
+        Text source_text(1380, 715, 25, "from: " + std::to_string(source + 1));
         Text destination_text(1380, 750, 25,
-                              "to: " + std::to_string(destination));
+                              "to: " + std::to_string(destination + 1));
         Text urgency_text(1380, 785, 25, "urgency: " + std::to_string(urgency));
         req.draw(window);
         req_text.draw(window);
@@ -38,4 +37,5 @@ struct Request {
         destination_text.draw(window);
         urgency_text.draw(window);
     }
+    void set_time(int t) { end_time += t; }
 };

@@ -31,19 +31,21 @@ class Dispatcher {
     void tick();
     bool probability(int input_time);
 
-    Courier* get_courier(int);
+    Courier* get_courier(int, Request&);
     Request create_new_request(std::pair<int, int> deviation);
-    void assign_new_request(Request);
+    void assign_new_request();
     void print_time(sf::RenderWindow& window);
 
-    void drawCouriers(sf::RenderWindow& window);
+    void drawCouriers(sf::RenderWindow& window, int time_);
     std::vector<Courier*> get_couriers() { return couriers_; }
+    void add_request(Request request);
 
    private:
     std::vector<Courier*> couriers_;
     std::vector<std::vector<std::pair<int, int>>>
         branches_;  // must be filled with adjacency list
     // std::vector < Branch * >  branches_;
+    std::priority_queue<Request> requests_;
     int simulated_time_;
     std::mt19937 generator;
 };
@@ -87,7 +89,7 @@ void Dispatcher::tick() {
     simulated_time_ += 1;
 
     for (auto courier : couriers_) {
-        if (courier->is_request()) {
+        if (courier->is_busy()) {
             if (courier->get_current_request().end_time <=
                 get_simulated_time()) {
                 courier->give_away_current_request();
@@ -97,7 +99,7 @@ void Dispatcher::tick() {
     }
 }
 
-Courier* Dispatcher::get_courier(int start_loc) {
+Courier* Dispatcher::get_courier(int start_loc, Request& request) {
     std::vector<int> distance(branches_.size(), INT32_MAX);
     std::priority_queue<std::pair<int, int>> q;
 
@@ -138,7 +140,9 @@ Courier* Dispatcher::get_courier(int start_loc) {
             preferable_courier = courier;
         }
     }
+    preferable_distance += distance[request.destination];
     preferable_courier->add_wasted_time(preferable_distance);
+    request.end_time += preferable_distance;
     return preferable_courier;
 }
 
@@ -154,18 +158,21 @@ Request Dispatcher::create_new_request(std::pair<int, int> deviation) {
     // A + rand() % (B - A + 1);
 }
 
-void Dispatcher::assign_new_request(Request request) {
-    Courier* courier = get_courier(request.source);
-    if (courier == nullptr) {
-        throw std::logic_error("No courier here!");
+void Dispatcher::assign_new_request() {
+    if (!requests_.empty()) {
+        Request request = requests_.top();
+        Courier* courier = get_courier(request.source, request);
+        if (courier != nullptr) {
+            requests_.pop();
+            courier->set_request(request);
+            courier->add_consumed_time(courier->get_delivery_duration());
+        }
     }
-    courier->add_new_request(request);
-    courier->add_consumed_time(courier->get_delivery_duration());
 }
 
-void Dispatcher::drawCouriers(sf::RenderWindow& window) {
+void Dispatcher::drawCouriers(sf::RenderWindow& window, int time_) {
     for (int i = 0; i < couriers_.size(); ++i) {
-        couriers_[i]->draw(window);
+        couriers_[i]->draw(window, time_);
     }
 }
 
@@ -174,11 +181,11 @@ bool Dispatcher::probability(int input_time) {
     double probability;
 
     if (input_time < 240) {
-        probability = 0.3;  // Morning (before 12:00 PM)
+        probability = 0.1;  // Morning (before 12:00 PM)
     } else if (input_time < 360) {
-        probability = 0.7;  // Afternoon (from 12:00 to 14:00)
+        probability = 0.5;  // Afternoon (from 12:00 to 14:00)
     } else {
-        probability = 0.5;  // Evening (after 4:00 PM)
+        probability = 0.2;  // Evening (after 4:00 PM)
     }
     std::bernoulli_distribution dist(probability);
     return dist(generator);
@@ -195,3 +202,5 @@ void Dispatcher::print_time(sf::RenderWindow& window) {
     Text t(100, 760, 30, h_str + " : " + m_str);
     t.draw(window);
 }
+
+void Dispatcher::add_request(Request request) { requests_.push(request); }

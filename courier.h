@@ -18,11 +18,13 @@ class Courier {
     void add_consumed_time(int time_to_add);
 
     Request get_current_request();
-    void add_new_request(Request request);
+    // void add_new_request(Request request);
+    void set_request(Request request);
     Request give_away_current_request();
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window, int time_);
     int get_delivery_duration();
-    bool is_request();
+    bool is_busy() { return is_busy_; }
+    // bool is_request();
     void add_wasted_time(int time_to_add);
     int get_wasted_time() { return wasted_time_; }
     int get_consumed_time() { return consumed_time_; }
@@ -33,9 +35,12 @@ class Courier {
 
    protected:
     unsigned int number_;
-    std::priority_queue<Request> pending_request_;
+    // std::priority_queue<Request> pending_request_;
+    bool is_busy_ = false;
+    Request current_request_;
     std::vector<Request> completed_requests_;
     unsigned int current_location_;
     unsigned int consumed_time_;
     int wasted_time_;
+    double x_, y_;
 };
