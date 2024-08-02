@@ -1,1 +1,0 @@
-/usr/bin/clang++ -O3 -DNDEBUG -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=11.7 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/FTL_delivery.dir/main.cpp.o -o FTL_delivery 
